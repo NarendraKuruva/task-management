@@ -10,75 +10,21 @@ import TaskModel from '../models/TaskModel'
 import ProfileModel from '../models/ProfileModel'
 
 class TaskManagementStore {
-   @observable organizations!: OrganizationModel[]
-   @observable activeOrganization!: string
-   @observable organizationBoards!: BoardModel[]
-   @observable organizationBoardsApiStatus!: number
-   @observable boardColumns!: ColumnModel[]
+   organizationBoards!: BoardModel[]
+   organizationBoardsApiStatus!: number
+   boardColumns!: ColumnModel[]
    @observable tasksApiStatus!: number
    @observable organizationsApiStatus!: number
    @observable taskManagementService: TaskManagementService
-   @observable boardNameInputVal!: string
-   @observable organizationInputVal!: string
-   @observable columnNameInputVal!: string
-   @observable taskNameInputVal!: string
    profileDetails!: ProfileModel
    constructor(taskManagementService) {
       this.profileDetails
-      this.organizations = []
-      this.activeOrganization = ''
       this.organizationBoards = []
       this.organizationBoardsApiStatus = 0
       this.taskManagementService = taskManagementService
       this.organizationsApiStatus = 0
       this.boardColumns = []
-      this.boardNameInputVal = ''
-      this.organizationInputVal = ''
-      this.columnNameInputVal = ''
-      this.taskNameInputVal = ''
       this.tasksApiStatus = 0
-   }
-   @action.bound onChangeOrganizationInput = event => {
-      this.organizationInputVal = event.target.value
-   }
-   @action.bound onChangeBoardInput = event => {
-      this.boardNameInputVal = event.target.value
-   }
-   @action.bound setInputValueEmpty = () => {
-      this.boardNameInputVal = ''
-      this.organizationInputVal = ''
-      this.columnNameInputVal = ''
-      this.taskNameInputVal = ''
-   }
-   @action.bound onChangeColumnNameInput = event => {
-      this.columnNameInputVal = event.target.value
-   }
-   @action.bound onChangeTaskNameInputVal = event => {
-      this.taskNameInputVal = event.target.value
-   }
-   @action.bound getMemberOrganizations() {
-      this.organizationsApiStatus = 0
-      const AllOrganizationsPromiseObj = this.taskManagementService.getMemberOrganizationsData()
-      return bindPromiseWithOnSuccess(AllOrganizationsPromiseObj)
-         .to(
-            status => {
-               this.organizationsApiStatus = status
-            },
-            response => {
-               if (!response) return
-               const UpdatedOrganizations = response.map(
-                  eachOrganization => new OrganizationModel(eachOrganization)
-               )
-               this.organizations = UpdatedOrganizations
-            }
-         )
-         .catch(error => {
-            console.log(error)
-         })
-   }
-
-   @action.bound setActiveOrganization(organization) {
-      this.activeOrganization = organization
    }
 
    @action.bound getMyProfileData = () => {
@@ -105,7 +51,6 @@ class TaskManagementStore {
             console.log(error)
          })
    }
-
    @action.bound getOrganizationBoards(organizationId: string) {
       this.organizationBoardsApiStatus = 0
       const OrganizationsBoardsPromiseObj = this.taskManagementService.getBoardsInOrganization(
@@ -117,6 +62,7 @@ class TaskManagementStore {
                this.organizationBoardsApiStatus = status
             },
             response => {
+               console.log(response)
                if (!response) return
                const updatedBoards = response.map(
                   eachBoard => new BoardModel(eachBoard)
@@ -146,12 +92,12 @@ class TaskManagementStore {
                )
                const column = this.boardColumns[colIndex]
                column.tasksInList = tasksInGivenList
-               {
-                  for (const each of column.tasksInList) {
-                     column.tasksMap.set(each.id, each)
-                  }
-               }
-               return tasksInGivenList
+               // {
+               //    for (const each of column.tasksInList) {
+               //       column.tasksMap.set(each.id, each)
+               //    }
+               // }
+               // return tasksInGivenList
             }
          )
          .catch(error => {
@@ -181,11 +127,12 @@ class TaskManagementStore {
                   eachColumn => new ColumnModel(eachColumn)
                )
                this.boardColumns = updatedBoardColumns
-               {
-                  for (const each of updatedBoardColumns) {
-                     this.getTasksInList(each.id)
-                  }
-               }
+               console.log(this.boardColumns)
+               // {
+               //    for (const each of updatedBoardColumns) {
+               //       this.getTasksInList(each.id)
+               //    }
+               // }
             }
          )
          .catch(error => {

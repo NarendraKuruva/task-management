@@ -19,8 +19,8 @@ class ColumnsStore {
    @action.bound updateColumnPosition(listId, index) {
       this.taskManagementService.updateColumnPosition(listId, index)
    }
-   @action.bound updateColumnOrder(boardColumns) {
-      this.columnsList = boardColumns
+   @action.bound updateColumnOrder(columnsList) {
+      this.columnsList = columnsList
    }
    @action.bound getTasksInList(id: string) {
       this.tasksApiStatus = 0
@@ -32,10 +32,12 @@ class ColumnsStore {
             },
             response => {
                if (!response) return
-               const tasksInGivenList = response.map(
-                  eachTask => new TaskModel(eachTask)
+               response.map(eachTask =>
+                  this.columnsList[id].tasksMap.set(
+                     eachTask.id,
+                     new TaskModel(eachTask)
+                  )
                )
-               // return tasksInGivenList
             }
          )
          .catch(error => {

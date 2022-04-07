@@ -3,6 +3,7 @@ import Popup from 'reactjs-popup'
 import { inject, observer } from 'mobx-react'
 import { GrFormClose } from 'react-icons/gr'
 import { BsPlus } from 'react-icons/bs'
+import BoardsStore from '../../stores/BoardsStore'
 import TaskManagementStore from '../../stores/TaskManagementStore'
 import {
    AddBoardContainer,
@@ -18,18 +19,22 @@ interface CreateBoardModalProps {
 }
 interface InjectedProps extends CreateBoardModalProps {
    taskManagementStore: TaskManagementStore
+   boardsStore: BoardsStore
 }
 
-const CreateBoard = inject('taskManagementStore')(
+const CreateBoard = inject(
+   'taskManagementStore',
+   'boardsStore'
+)(
    observer((props: CreateBoardModalProps) => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
 
       const [boardNameInputVal, changeboardNameInputVal] = useState('')
 
       const onAddNewBoard = () => {
-         const { taskManagementStore } = getInjectedProps()
+         const { boardsStore } = getInjectedProps()
          const { idOrganization } = props
-         const { addBoard } = taskManagementStore
+         const { addBoard } = boardsStore
          addBoard(boardNameInputVal, idOrganization)
          changeboardNameInputVal('')
       }
