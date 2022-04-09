@@ -31,7 +31,7 @@ class BoardsStore {
             }
          )
          .catch(error => {
-            console.log(error)
+            alert(error)
          })
    }
    @action.bound addBoard(name: string, idOrganization: string) {
@@ -39,11 +39,10 @@ class BoardsStore {
          name,
          idOrganization
       )
-      console.log(AddBoardPromiseObj)
       return bindPromiseWithOnSuccess(AddBoardPromiseObj)
          .to(
             status => {
-               this.boardsApiStatus = status
+               // this.boardsApiStatus = status
             },
             response => {
                if (!response) return
@@ -52,8 +51,9 @@ class BoardsStore {
             }
          )
          .catch(error => {
-            console.log(error)
+            alert(error)
          })
    }
 }
+
 export default BoardsStore

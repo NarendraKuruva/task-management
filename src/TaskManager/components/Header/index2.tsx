@@ -7,7 +7,6 @@ import { History, LocationState } from 'history'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { IoChevronDown, IoCloseSharp } from 'react-icons/io5'
 import Popup from 'reactjs-popup'
-import TaskManagementStore from '../../stores/TaskManagementStore'
 import OrganizationModel from '../../stores/models/OrganizationsModel'
 import OrganizationsStore from '../../stores/OrganizationsStore'
 import {
@@ -45,10 +44,9 @@ interface HeaderProps {
 }
 
 interface InjectedProps extends HeaderProps {
-   taskManagementStore: TaskManagementStore
    organizationsStore: OrganizationsStore
 }
-@inject('taskManagementStore', 'organizationsStore')
+@inject('organizationsStore')
 @observer
 class UpdatedHeader extends Component<HeaderProps> {
    getInjectedProps = (): InjectedProps => this.props as InjectedProps
@@ -59,7 +57,7 @@ class UpdatedHeader extends Component<HeaderProps> {
       history.push('/login')
    }
    renderOrganizationListItem = (props: OrganizationModel) => {
-      console.log(props, 'details')
+      // console.log(props, 'details')
       const { organizationsStore } = this.getInjectedProps()
       const { setActiveOrganization, activeOrganizationId } = organizationsStore
       const setActiveOrg = () => {
@@ -84,7 +82,7 @@ class UpdatedHeader extends Component<HeaderProps> {
    render() {
       const { organizationsStore } = this.getInjectedProps()
       const { organizationsList } = organizationsStore
-      console.log(organizationsList, 'organizationsListInHeader')
+      // console.log(organizationsList, 'organizationsListInHeader')
       return (
          <HeaderContainer>
             <OrganizationAndBoardsContainer>

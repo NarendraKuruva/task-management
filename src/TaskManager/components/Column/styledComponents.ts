@@ -41,6 +41,9 @@ export const ActionsPopupTrigger = styled.p`
 export const TasksListContainer = styled.div`
    overflow-y: auto;
    flex-grow: 1;
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
 `
 
 export const AddTaskTextContainer = styled.div`
@@ -64,7 +67,7 @@ export const AddTaskPopupContainer = styled.div`
    background: #ebecf0;
    width: 254px;
    padding: 10px;
-   margin-top: 60px;
+   // margin-top: 60px;
    display: flex;
    flex-direction: column;
    border-bottom-left-radius: 4px;

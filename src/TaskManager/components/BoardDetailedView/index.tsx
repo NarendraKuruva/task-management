@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { History } from 'history'
+import { useParams } from 'react-router'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { inject, observer } from 'mobx-react'
-import { match } from 'react-router-dom'
 import { BsPlus } from 'react-icons/bs'
 import { IoCloseSharp } from 'react-icons/io5'
 import Popup from 'reactjs-popup'
-import TaskManagementStore from '../../stores/TaskManagementStore'
+import ColumnsStore from '../../stores/ColumnsStore'
 import Header from '../Header'
 import Loading from '../LoadingPage'
 import Column from '../Column'
+import getOrganizationsHOC from '../HOC'
 import {
    AddColumnBtn,
    AddColumnBtnAndCloseContainer,
@@ -22,68 +22,55 @@ import {
    ColumnsContainer,
    ColumnsListContainer
 } from './styledComponents'
-interface BoardProps {
-   match: match<Params>
-   history: History
+
+interface InjectedProps {
+   columnsStore: ColumnsStore
 }
 
-interface Params {
+interface BoardDetailsParams {
    id: string
 }
-interface InjectedProps extends BoardProps {
-   taskManagementStore: TaskManagementStore
-}
 
-const BoardDetailedView = inject('taskManagementStore')(
-   observer((props: BoardProps) => {
+const BoardDetailedView = inject('columnsStore')(
+   observer(props => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
       const [columnNameInputVal, changecolumnNameInputVal] = useState('')
-      const { taskManagementStore } = getInjectedProps()
-
+      const { columnsStore } = getInjectedProps()
+      const { columnIdsList } = columnsStore
+      console.log(useParams(), 'useParams')
+      const { id } = useParams<BoardDetailsParams>()
+      console.log(id)
       useEffect(() => {
-         const { taskManagementStore } = getInjectedProps()
-         const { getBoardDetails } = taskManagementStore
+         const { columnsStore } = getInjectedProps()
+         const { getBoardColumns } = columnsStore
+         getBoardColumns(id)
+      }, [])
 
-         const { match } = props
-         const { params } = match
-         const { id } = params
-         console.log('board-detailed-view', id)
-         getBoardDetails(id)
-      })
       const addNewColumn = () => {
-         const { match } = props
-         const { params } = match
-         const { id } = params
-         const { taskManagementStore } = getInjectedProps()
-         const { addColumn, getBoardDetails } = taskManagementStore
+         const { columnsStore } = getInjectedProps()
+         const { addColumn } = columnsStore
          addColumn(columnNameInputVal, id)
          changecolumnNameInputVal('')
-         getBoardDetails(id)
       }
 
-      // const onDragEnd = onDragEnd.bind(this)
-
-      const findIndexInGiven = (list, val) => {
-         const index = list.findIndex(each => each.id === val)
-         return index
-      }
       const reorder = (list, startIndex, endIndex) => {
-         const result = Array.from(list)
+         const result = list
          const [removed] = result.splice(startIndex, 1)
          result.splice(endIndex, 0, removed)
 
          return result
       }
+
       const onDragEnd = result => {
          // console.log(result)
-         const { taskManagementStore } = getInjectedProps()
+         const { columnsStore } = getInjectedProps()
          if (result.type === 'task') {
             const {
-               boardColumns,
+               columnsList,
                updateTasksInList,
                updateTaskPosition,
                updateTaskList
-            } = taskManagementStore
+            } = columnsStore
             const { destination, source, draggableId } = result
             if (!destination) {
                return
@@ -95,37 +82,35 @@ const BoardDetailedView = inject('taskManagementStore')(
                return
             }
 
-            const startColumnIndex = findIndexInGiven(
-               boardColumns,
-               source.droppableId
+            const startColumn = columnsList.get(source.droppableId)
+            const destinationColumn = columnsList.get(destination.droppableId)
+            if (startColumn === undefined || destinationColumn === undefined) {
+               return
+            }
+            // console.log(destinationColumn, startColumn)
+            const startColTasksMap = startColumn.tasksMap
+            const startColTasksList = Array.from(startColTasksMap.values())
+            const destinationColTasksMap = destinationColumn.tasksMap
+            const destinationColTasks = Array.from(
+               destinationColTasksMap.values()
             )
-            const destinationColumnIndex = findIndexInGiven(
-               boardColumns,
-               destination.droppableId
-            )
-
-            const startColumn = boardColumns[startColumnIndex]
-            const destinationColumn = boardColumns[destinationColumnIndex]
-
-            const startColTasksList = startColumn.tasksInList
-            const destinationColTasks = destinationColumn.tasksInList
-            const movedTaskIndex = findIndexInGiven(
-               startColTasksList,
-               draggableId
-            )
-
+            const movedTask = startColTasksMap.get(draggableId)
+            if (movedTask === undefined) {
+               return
+            }
+            // console.log(movedTask)
             if (startColumn === destinationColumn) {
-               const newTasksList = Array.from(startColumn.tasksInList)
+               // console.log('column-did not change')
+               const newTasksList = Array.from(startColumn.tasksMap.values())
                newTasksList.splice(source.index, 1)
-               newTasksList.splice(
-                  destination.index,
-                  0,
-                  startColTasksList[movedTaskIndex]
+               newTasksList.splice(destination.index, 0, movedTask)
+
+               const updatedTasksMap = new Map()
+               newTasksList.map(eachTask =>
+                  updatedTasksMap.set(eachTask.id, eachTask)
                )
-               updateTasksInList(
-                  boardColumns[startColumnIndex].id,
-                  newTasksList
-               )
+
+               updateTasksInList(startColumn.id, updatedTasksMap)
 
                const items = reorder(
                   startColTasksList,
@@ -139,9 +124,7 @@ const BoardDetailedView = inject('taskManagementStore')(
                } else if (destination.index === items.length - 1) {
                   finalPos = 'bottom'
                } else {
-                  // @ts-expect-error:testing purpose
                   const firstPosition = items[destination.index + 1].pos
-                  // @ts-expect-error:testing purpose
                   const secondPosition = items[destination.index - 1].pos
                   finalPos = (firstPosition + secondPosition) / 2
                }
@@ -149,21 +132,22 @@ const BoardDetailedView = inject('taskManagementStore')(
             } else {
                const newStartTasksList = Array.from(startColTasksList)
                newStartTasksList.splice(source.index, 1)
-
+               const updatedStartTasksMap = new Map()
+               newStartTasksList.map(eachTask =>
+                  updatedStartTasksMap.set(eachTask.id, eachTask)
+               )
                const newDestinationColTasks = Array.from(destinationColTasks)
-               newDestinationColTasks.splice(
-                  destination.index,
-                  0,
-                  startColTasksList[movedTaskIndex]
+               newDestinationColTasks.splice(destination.index, 0, movedTask)
+               const updatedDestinationColTasksMap = new Map()
+
+               newDestinationColTasks.map(eachTask =>
+                  updatedDestinationColTasksMap.set(eachTask.id, eachTask)
                )
 
+               updateTasksInList(startColumn.id, updatedStartTasksMap)
                updateTasksInList(
-                  boardColumns[startColumnIndex].id,
-                  newStartTasksList
-               )
-               updateTasksInList(
-                  boardColumns[destinationColumnIndex].id,
-                  newDestinationColTasks
+                  destinationColumn.id,
+                  updatedDestinationColTasksMap
                )
 
                const items = newDestinationColTasks
@@ -188,23 +172,26 @@ const BoardDetailedView = inject('taskManagementStore')(
          }
          if (result.type === 'column') {
             const {
-               boardColumns,
+               columnsList,
                updateColumnOrder,
                updateColumnPosition
-            } = taskManagementStore
-            const { source, destination, draggableId } = result
-            const items = reorder(boardColumns, source.index, destination.index)
-            updateColumnOrder(items)
+            } = columnsStore
 
-            let finalPosition
+            const { source, destination, draggableId } = result
+            const columnsArray = Array.from(columnsList.values())
+            const items = reorder(columnsArray, source.index, destination.index)
+            const updatedColsMap = new Map()
+            for (const each of items) {
+               updatedColsMap.set(each.id, each)
+            }
+            updateColumnOrder(updatedColsMap)
+            let finalPosition!: string | number
             if (destination.index === 0) {
                finalPosition = 'top'
             } else if (destination.index === items.length - 1) {
                finalPosition = 'bottom'
             } else {
-               // @ts-expect-error:testing purpose
                const firstPosition = items[destination.index + 1].pos
-               // @ts-expect-error:testing purpose
                const secondPosition = items[destination.index - 1].pos
                finalPosition = (firstPosition + secondPosition) / 2
             }
@@ -218,10 +205,11 @@ const BoardDetailedView = inject('taskManagementStore')(
             <Loading />
          </BoardDetailedViewMainContainer>
       )
-      // df
+
       const renderBoardDetailedView = () => {
-         const { taskManagementStore } = getInjectedProps()
-         const { boardColumns } = taskManagementStore
+         const { columnsStore } = getInjectedProps()
+         const { columnsList } = columnsStore
+         const columnsListArray = Array.from(columnsList.values())
          return (
             <BoardDetailedViewMainContainer>
                <Header />
@@ -237,7 +225,7 @@ const BoardDetailedView = inject('taskManagementStore')(
                               ref={provided.innerRef}
                               {...provided.droppableProps}
                            >
-                              {boardColumns.map((eachCol, index) => (
+                              {columnsListArray.map((eachCol, index) => (
                                  <Column
                                     columnDetails={eachCol}
                                     key={eachCol.id}
@@ -297,16 +285,15 @@ const BoardDetailedView = inject('taskManagementStore')(
          )
       }
 
-      // const { taskManagementStore } = getInjectedProps()
-      const { tasksApiStatus } = taskManagementStore
-      switch (tasksApiStatus) {
+      const { columnsListApiStatus } = columnsStore
+      switch (columnsListApiStatus) {
          case 200:
             return renderBoardDetailedView()
          case 400:
             return renderLoading()
          default:
-            return renderBoardDetailedView()
+            return renderLoading()
       }
    })
 )
-export default BoardDetailedView
+export default getOrganizationsHOC(BoardDetailedView)

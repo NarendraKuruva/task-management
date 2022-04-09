@@ -10,6 +10,7 @@ export const ColumnsContainer = styled.div`
    flex-direction: row;
    padding-top: 20px;
    padding-left: 38px;
+   padding-right: 38px;
    min-width: 100vw;
    height: 90vh;
    background: #0079bf;

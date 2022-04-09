@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
-import { History } from 'history'
-import { match } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { MdPersonOutline } from 'react-icons/md'
-import TaskManagementStore from '../../stores/TaskManagementStore'
 import Header from '../Header'
 import BoardCard from '../BoardCard'
 import CreateBoard from '../CreateNewBoardModal'
@@ -30,40 +28,30 @@ import {
    OrganizationsContainer
 } from './styledComponents'
 
-interface OrganizationProps {
-   match: match<Params>
-   history: History
-}
-
-interface Params {
+interface OrganizationParams {
    id: string
 }
-interface InjectedProps extends OrganizationProps {
-   taskManagementStore: TaskManagementStore
+interface InjectedProps {
    organizationsStore: OrganizationsStore
    boardsStore: BoardsStore
 }
 
 const Organization = inject(
-   'taskManagementStore',
    'organizationsStore',
    'boardsStore'
 )(
-   observer((props: OrganizationProps) => {
+   observer(props => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
       const { boardsStore } = getInjectedProps()
       const { boardsList } = boardsStore
-
+      const { id } = useParams<OrganizationParams>()
       useEffect(() => {
-         const { match } = props
-         const { params } = match
-         const { id } = params
          const { organizationsStore, boardsStore } = getInjectedProps()
          const { setActiveOrganization } = organizationsStore
          const { getOrganizationBoards } = boardsStore
          getOrganizationBoards(id)
          setActiveOrganization(id)
-      }, [boardsList])
+      }, [])
 
       const renderLoading = () => (
          <OrganizationPageContainer>
@@ -73,9 +61,6 @@ const Organization = inject(
       )
 
       const renderOrganizationBoards = () => {
-         const { match } = props
-         const { params } = match
-         const { id } = params
          const { boardsStore } = getInjectedProps()
          const { boardsList } = boardsStore
          const boardsArray = Array.from(boardsList.values())
@@ -120,7 +105,6 @@ const Organization = inject(
       }
 
       const { boardsApiStatus } = boardsStore
-      console.log(boardsApiStatus)
       switch (boardsApiStatus) {
          case 200:
             return renderOrganizationBoards()
@@ -132,4 +116,4 @@ const Organization = inject(
    })
 )
 
-export default Organization
+export default getOrganizationsHOC(Organization)

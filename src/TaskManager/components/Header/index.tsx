@@ -116,21 +116,26 @@ const Header = inject('organizationsStore')(
                      contentStyle={{ padding: '0px', border: 'none' }}
                      arrow={false}
                   >
-                     <OrganizationsListMainContainer>
-                        <OrganizationsListContainer>
-                           <OrganizationsCloseIconContainer>
-                              <IoCloseSharp onClick={close} />
-                           </OrganizationsCloseIconContainer>
-                           <WorkspaceTextDecoration>
-                              Workspace
-                           </WorkspaceTextDecoration>
-                           {Array.from(
-                              organizationsList.values()
-                           ).map(eachOrganization =>
-                              renderOrganizationListItem(eachOrganization)
-                           )}
-                        </OrganizationsListContainer>
-                     </OrganizationsListMainContainer>
+                     {close => (
+                        <OrganizationsListMainContainer>
+                           <OrganizationsListContainer>
+                              <OrganizationsCloseIconContainer>
+                                 <IoCloseSharp
+                                    onClick={close}
+                                    cursor='pointer'
+                                 />
+                              </OrganizationsCloseIconContainer>
+                              <WorkspaceTextDecoration>
+                                 Workspace
+                              </WorkspaceTextDecoration>
+                              {Array.from(
+                                 organizationsList.values()
+                              ).map(eachOrganization =>
+                                 renderOrganizationListItem(eachOrganization)
+                              )}
+                           </OrganizationsListContainer>
+                        </OrganizationsListMainContainer>
+                     )}
                   </Popup>
                   <BoardsContainer>
                      <BoardsLogoImg src='https://res.cloudinary.com/deiiiaxpc/image/upload/v1648731221/task_management/logologo_to5kyl.png' />

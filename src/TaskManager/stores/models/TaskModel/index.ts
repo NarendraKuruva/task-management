@@ -5,10 +5,10 @@ class TaskModel {
 
    closed!: boolean
    idBoard!: string
-   @observable idList!: string
+   idList!: string
    idShort!: number
    name!: string
-   @observable pos!: number
+   pos!: number
    shortLink!: string
    shortUrl!: string
    subscribed!: boolean

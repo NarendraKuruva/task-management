@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import Modal from 'react-modal'
 
 export const BoardNameInput = styled.input`
    background: #a7b1bf;
@@ -58,6 +59,10 @@ export const CreateBoardModalContainer = styled.div`
    width: 50vw;
 `
 export const ModalMainContainer = styled.div`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: transparent;
    @media (max-width: 786px) {
       height: 100vh;
       display: flex;

@@ -15,10 +15,7 @@ class Testing extends Component {
    getInjectedProps = (): InjectedProps => this.props as InjectedProps
    render() {
       const { organizationsStore } = this.getInjectedProps()
-      console.log(
-         Array.from(organizationsStore.organizationsList.values()),
-         'home'
-      )
+
       const { history } = this.getInjectedProps()
       return (
          <div>

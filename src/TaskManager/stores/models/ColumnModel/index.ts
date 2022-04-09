@@ -1,8 +1,7 @@
 import { observable } from 'mobx'
-import { networkCallWithFetch } from '../../../../Common/utils/APIUtils'
 import TaskManagementService from '../../../services/TaskManagementService'
-import TaskManagementServiceApi from '../../../services/TaskManagementService/index.api'
 import TaskModel from '../TaskModel'
+
 class ColumnModel {
    id!: string
    columnName!: string
@@ -12,7 +11,8 @@ class ColumnModel {
    pos!: number
    subscribed!: boolean
    @observable tasksInList!: TaskModel[]
-   tasksMap!: Map<string, TaskModel>
+   @observable tasksMap!: Map<string, TaskModel>
+   @observable tasksListApiStatus!: number
    constructor(data) {
       this.id = data.id
       this.columnName = data.name
@@ -22,6 +22,7 @@ class ColumnModel {
       this.subscribed = data.subscribed
       this.tasksInList = []
       this.tasksMap = new Map()
+      this.tasksListApiStatus = 0
    }
 }
 export default ColumnModel
