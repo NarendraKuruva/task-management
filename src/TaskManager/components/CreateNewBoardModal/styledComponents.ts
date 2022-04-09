@@ -27,6 +27,8 @@ export const BoardNameInput = styled.input`
       color: #f4f4f4;
    }
 `
+
+export const CreateBoardBtnContainer = styled.div``
 export const CreateBoardBtn = styled.button`
    display: flex;
    flex-direction: row;
@@ -116,3 +118,6 @@ export const AddBoardContainer = styled.div`
       width: 90vw;
    }
 `
+export const AddBoardTriggerText = styled.p``
+
+export const WorkspacesLabelText = styled.h2``

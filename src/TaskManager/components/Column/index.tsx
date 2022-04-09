@@ -13,11 +13,15 @@ import {
    AddTaskBtn,
    AddTaskPopupBtn,
    AddTaskPopupContainer,
+   AddTaskPopupMainContainer,
    AddTaskTextContainer,
+   ColumnActionsContainer,
    ColumnContainer,
    ColumnMainContainer,
    ColumnName,
    ColumnNameAndActionsContainer,
+   DeleteBtn,
+   HideBtn,
    PopupTaskTitleInput,
    TasksListContainer
 } from './styledComponents'
@@ -31,11 +35,15 @@ interface InjectedProps extends ColumnProps {
    columnsStore: ColumnsStore
 }
 
+const hideBtnText = 'Hide'
+const deleteBtnText = 'Delete'
+const addTaskTriggerText = 'Add a task'
+const addTaskBtnText = 'Add Task'
+
 const Column = inject('columnsStore')(
    observer((props: ColumnProps) => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
       const [taskNameInputVal, changeTaskNameInputVal] = useState('')
-
       const handleAddTask = () => {
          const { columnsStore } = getInjectedProps()
          const { addTask } = columnsStore
@@ -43,17 +51,21 @@ const Column = inject('columnsStore')(
          const { id } = columnDetails
          addTask(taskNameInputVal, id)
          changeTaskNameInputVal('')
-         handleModalState()
+         handleAddTaskModalState()
       }
 
       // const renderTasksList = () => {
       //    return
       // }
 
-      const [modelState, updateState] = useState(false)
-      const handleModalState = () => {
-         updateState(!modelState)
-         console.log(modelState)
+      const [addTaskModelState, updateAddTaskModelState] = useState(false)
+      const handleAddTaskModalState = () => {
+         updateAddTaskModelState(!addTaskModelState)
+         console.log(addTaskModelState)
+      }
+      const handleAddTaskClose = () => {
+         changeTaskNameInputVal('')
+         updateAddTaskModelState(false)
       }
 
       const { columnDetails, index } = props
@@ -90,10 +102,10 @@ const Column = inject('columnsStore')(
                               }}
                               arrow={false}
                            >
-                              <div>
-                                 <p>Hide</p>
-                                 <p>Delete</p>
-                              </div>
+                              <ColumnActionsContainer>
+                                 <HideBtn>{hideBtnText}</HideBtn>
+                                 <DeleteBtn>{deleteBtnText}</DeleteBtn>
+                              </ColumnActionsContainer>
                            </Popup>
                         </ColumnNameAndActionsContainer>
                         <Droppable droppableId={id} type='task'>
@@ -113,46 +125,46 @@ const Column = inject('columnsStore')(
                               </TasksListContainer>
                            )}
                         </Droppable>
-                        <div>
+                        <AddTaskPopupMainContainer>
                            <Popup
                               trigger={
                                  <AddTaskTextContainer>
                                     <BsPlus size={30} />
-
-                                    <AddTaskBtn>Add a task</AddTaskBtn>
+                                    <AddTaskBtn>
+                                       {addTaskTriggerText}
+                                    </AddTaskBtn>
                                  </AddTaskTextContainer>
                               }
-                              open={modelState}
-                              onOpen={handleModalState}
-                              // position='center center'
+                              open={addTaskModelState}
+                              onOpen={handleAddTaskModalState}
+                              onClose={handleAddTaskClose}
+                              position='center center'
                               closeOnDocumentClick
                               arrow={false}
                            >
-                              {close => (
-                                 <AddTaskPopupContainer>
-                                    <PopupTaskTitleInput
-                                       onChange={event =>
-                                          changeTaskNameInputVal(
-                                             event.target.value
-                                          )
-                                       }
-                                       value={taskNameInputVal}
+                              <AddTaskPopupContainer>
+                                 <PopupTaskTitleInput
+                                    onChange={event =>
+                                       changeTaskNameInputVal(
+                                          event.target.value
+                                       )
+                                    }
+                                    value={taskNameInputVal}
+                                 />
+                                 <AddTaskAndCloseBtnsContainer>
+                                    <AddTaskPopupBtn onClick={handleAddTask}>
+                                       {addTaskBtnText}
+                                    </AddTaskPopupBtn>
+                                    <IoCloseSharp
+                                       color='#64748B'
+                                       size={26}
+                                       onClick={handleAddTaskModalState}
+                                       cursor={'pointer'}
                                     />
-                                    <AddTaskAndCloseBtnsContainer>
-                                       <AddTaskPopupBtn onClick={handleAddTask}>
-                                          Add Task
-                                       </AddTaskPopupBtn>
-                                       <IoCloseSharp
-                                          color='#64748B'
-                                          size={26}
-                                          onClick={handleModalState}
-                                          cursor={'pointer'}
-                                       />
-                                    </AddTaskAndCloseBtnsContainer>
-                                 </AddTaskPopupContainer>
-                              )}
+                                 </AddTaskAndCloseBtnsContainer>
+                              </AddTaskPopupContainer>
                            </Popup>
-                        </div>
+                        </AddTaskPopupMainContainer>
                      </ColumnContainer>
                   )}
                </Draggable>

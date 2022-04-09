@@ -31,12 +31,14 @@ interface BoardDetailsParams {
    id: string
 }
 
+const addAnotherListContainerText = 'Add another list'
+const addListBtnText = 'Add List'
+
 const BoardDetailedView = inject('columnsStore')(
    observer(props => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
       const [columnNameInputVal, changecolumnNameInputVal] = useState('')
       const { columnsStore } = getInjectedProps()
-      const { columnIdsList } = columnsStore
       console.log(useParams(), 'useParams')
       const { id } = useParams<BoardDetailsParams>()
       console.log(id)
@@ -51,6 +53,7 @@ const BoardDetailedView = inject('columnsStore')(
          const { addColumn } = columnsStore
          addColumn(columnNameInputVal, id)
          changecolumnNameInputVal('')
+         handleAddColumnModalState()
       }
 
       const reorder = (list, startIndex, endIndex) => {
@@ -206,6 +209,15 @@ const BoardDetailedView = inject('columnsStore')(
          </BoardDetailedViewMainContainer>
       )
 
+      const [addColumnModalState, updateAddColumnModalState] = useState(false)
+      const handleAddColumnModalState = () => {
+         updateAddColumnModalState(!addColumnModalState)
+      }
+      const handleCloseAddColModal = () => {
+         updateAddColumnModalState(false)
+         changecolumnNameInputVal('')
+      }
+
       const renderBoardDetailedView = () => {
          const { columnsStore } = getInjectedProps()
          const { columnsList } = columnsStore
@@ -241,42 +253,43 @@ const BoardDetailedView = inject('columnsStore')(
                            trigger={
                               <AddColumnContainer>
                                  <BsPlus size={25} />
-                                 <AddColumnText>Add another list</AddColumnText>
+                                 <AddColumnText>
+                                    {addAnotherListContainerText}
+                                 </AddColumnText>
                               </AddColumnContainer>
                            }
                            position='center center'
                            on='click'
+                           open={addColumnModalState}
+                           onOpen={handleAddColumnModalState}
+                           onClose={handleCloseAddColModal}
                            closeOnDocumentClick
                            mouseLeaveDelay={300}
                            mouseEnterDelay={0}
                            arrow={false}
                         >
-                           {close => (
-                              <AddListPopupContainer>
-                                 <AddColumnNameInput
-                                    value={columnNameInputVal}
-                                    onChange={event =>
-                                       changecolumnNameInputVal(
-                                          event.target.value
-                                       )
-                                    }
+                           <AddListPopupContainer>
+                              <AddColumnNameInput
+                                 value={columnNameInputVal}
+                                 onChange={event =>
+                                    changecolumnNameInputVal(event.target.value)
+                                 }
+                              />
+                              <AddColumnBtnAndCloseContainer>
+                                 <AddColumnBtn
+                                    onClick={addNewColumn}
+                                    type='button'
+                                 >
+                                    {addListBtnText}
+                                 </AddColumnBtn>
+                                 <IoCloseSharp
+                                    color='#64748B'
+                                    size={26}
+                                    onClick={handleAddColumnModalState}
+                                    cursor={'pointer'}
                                  />
-                                 <AddColumnBtnAndCloseContainer>
-                                    <AddColumnBtn
-                                       onClick={addNewColumn}
-                                       type='button'
-                                    >
-                                       Add List
-                                    </AddColumnBtn>
-                                    <IoCloseSharp
-                                       color='#64748B'
-                                       size={26}
-                                       onClick={close}
-                                       cursor={'pointer'}
-                                    />
-                                 </AddColumnBtnAndCloseContainer>
-                              </AddListPopupContainer>
-                           )}
+                              </AddColumnBtnAndCloseContainer>
+                           </AddListPopupContainer>
                         </Popup>
                      </AddListPopupMainContainer>
                   </ColumnsContainer>

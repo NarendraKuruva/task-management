@@ -15,7 +15,8 @@ export const ColumnContainer = styled.div`
    margin-right: 10px;
    display: flex;
    flex-direction: column;
-   max-height: 85vh;
+   // max-height: 85vh;
+   flex-grow: 1;
 `
 
 export const ColumnNameAndActionsContainer = styled.div`
@@ -33,18 +34,23 @@ export const ColumnName = styled.p`
    color: #475569;
 `
 
+export const ColumnActionsContainer = styled.div``
+
+export const HideBtn = styled.button``
+export const DeleteBtn = styled.button``
+
 export const ActionsPopupTrigger = styled.p`
    font-size: 20px;
    font-weight: bold;
    cursor: pointer;
 `
 export const TasksListContainer = styled.div`
-   overflow-y: auto;
+   // overflow-y: auto;
    flex-grow: 1;
    display: flex;
    flex-direction: column;
-   flex-grow: 1;
 `
+export const AddTaskPopupMainContainer = styled.div``
 
 export const AddTaskTextContainer = styled.div`
    cursor: pointer;
@@ -67,7 +73,7 @@ export const AddTaskPopupContainer = styled.div`
    background: #ebecf0;
    width: 254px;
    padding: 10px;
-   // margin-top: 60px;
+   margin-top: 60px;
    display: flex;
    flex-direction: column;
    border-bottom-left-radius: 4px;

@@ -9,6 +9,7 @@ import Loading from '../LoadingPage'
 import OrganizationsStore from '../../stores/OrganizationsStore'
 import getOrganizationsHOC from '../HOC'
 import BoardsStore from '../../stores/BoardsStore'
+import TaskManagementStore from '../../stores/TaskManagementStore'
 import {
    NO_BOARDS_IN_ORG_TEXT,
    YOUR_BOARDS_TEXT
@@ -34,16 +35,17 @@ interface OrganizationParams {
 interface InjectedProps {
    organizationsStore: OrganizationsStore
    boardsStore: BoardsStore
+   taskManagementStore: TaskManagementStore
 }
 
 const Organization = inject(
    'organizationsStore',
-   'boardsStore'
+   'boardsStore',
+   'taskManagementStore'
 )(
    observer(props => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
       const { boardsStore } = getInjectedProps()
-      const { boardsList } = boardsStore
       const { id } = useParams<OrganizationParams>()
       useEffect(() => {
          const { organizationsStore, boardsStore } = getInjectedProps()
@@ -61,13 +63,15 @@ const Organization = inject(
       )
 
       const renderOrganizationBoards = () => {
-         const { boardsStore } = getInjectedProps()
+         const { boardsStore, taskManagementStore } = getInjectedProps()
          const { boardsList } = boardsStore
          const boardsArray = Array.from(boardsList.values())
          const organizationsText =
             boardsArray.length === 0 ? NO_BOARDS_IN_ORG_TEXT : YOUR_BOARDS_TEXT
-         const myName = 'Narendra Kuruva'
 
+         const { profileDetails } = taskManagementStore
+         const myName = profileDetails.fullName
+         const workspaceHeadingText = `${myName}'s Workspace`
          return (
             <OrganizationPageContainer>
                <Header />
@@ -76,9 +80,7 @@ const Organization = inject(
                      <WorkspaceInitialContainer>
                         <WorkspaceInitial>{myName[0]}</WorkspaceInitial>
                      </WorkspaceInitialContainer>
-                     <WorkspaceHeading>
-                        {`${myName}'s Workspace`}{' '}
-                     </WorkspaceHeading>
+                     <WorkspaceHeading>{workspaceHeadingText}</WorkspaceHeading>
                   </WorkspaceHeadingContainer>
                   <WorkspaceBoardsMainContainer>
                      <WorkspaceBoardsContainer>

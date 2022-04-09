@@ -37,16 +37,14 @@ class TaskManagementStore {
             },
             response => {
                if (!response) return
+               console.log(response)
                this.profileDetails = new ProfileModel(response)
+               console.log(this.profileDetails)
             }
          )
          .catch(error => {
             alert(error)
          })
-   }
-
-   @action.bound addTask(name: string, columnId: string) {
-      this.taskManagementService.addTask(name, columnId)
    }
 }
 

@@ -27,7 +27,6 @@ class OrganizationsStore {
             },
             response => {
                if (!response) return
-               // console.log(response, 'organization-data')
                response.map(eachOrganization =>
                   this.organizationsList.set(
                      eachOrganization.id,
