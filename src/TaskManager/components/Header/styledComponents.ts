@@ -40,8 +40,15 @@ export const HomeIconContainer = styled.div`
       margin-right: 8px;
       width: 24px;
       height: 24px;
-      left: 16px;
-      top: 16px;
+      // left: 16px;
+      // top: 16px;
+   }
+`
+export const HomeIconImg = styled.img`
+   width: 24px;
+   @media (max-width: 786px) {
+      width: 13px;
+      height: 13.33px;
    }
 `
 export const OrganizationContainer = styled.div`

@@ -36,7 +36,8 @@ import {
    OrganizationItemIndicator,
    OrganizationsCloseIconContainer,
    OrganizationsListMainContainer,
-   OrganizationsTriggerContainer
+   OrganizationsTriggerContainer,
+   HomeIconImg
 } from './styledComponents'
 
 interface HeaderProps {
@@ -103,7 +104,8 @@ const Header = inject(
                <OrganizationAndBoardsContainer>
                   <Link to='/trello/'>
                      <HomeIconContainer>
-                        <FiHome color='#ffffff' />
+                        {/* <FiHome color='#ffffff' /> */}
+                        <HomeIconImg src='https://res.cloudinary.com/deiiiaxpc/image/upload/v1649518479/task_management/home_adqoiv.png' />
                      </HomeIconContainer>
                   </Link>
 
