@@ -3,69 +3,95 @@ import Popup from 'reactjs-popup'
 import { inject, observer } from 'mobx-react'
 import { GrFormClose } from 'react-icons/gr'
 import { BsPlus } from 'react-icons/bs'
+import BoardsStore from '../../stores/BoardsStore'
 import TaskManagementStore from '../../stores/TaskManagementStore'
 import {
    AddBoardContainer,
+   AddBoardTriggerText,
    BoardNameInput,
    CloseBtn,
    CreateBoardBtn,
+   CreateBoardBtnContainer,
    ModalContainer,
-   ModalMainContainer
+   ModalMainContainer,
+   WorkspacesLabelText
 } from './styledComponents'
 
 interface CreateBoardModalProps {
    idOrganization: string
 }
 interface InjectedProps extends CreateBoardModalProps {
+   boardsStore: BoardsStore
    taskManagementStore: TaskManagementStore
 }
 
-const CreateBoard = inject('taskManagementStore')(
+const createNewBoardTriggerText = 'Create New Board'
+const createBoardBtnText = 'Create Board'
+
+const CreateBoard = inject(
+   'boardsStore',
+   'taskManagementStore'
+)(
    observer((props: CreateBoardModalProps) => {
       const getInjectedProps = (): InjectedProps => props as InjectedProps
 
       const [boardNameInputVal, changeboardNameInputVal] = useState('')
+      const [addBoardModalState, updateAddBoardModalState] = useState(false)
 
       const onAddNewBoard = () => {
-         const { taskManagementStore } = getInjectedProps()
+         const { boardsStore } = getInjectedProps()
          const { idOrganization } = props
-         const { addBoard } = taskManagementStore
+         const { addBoard } = boardsStore
          addBoard(boardNameInputVal, idOrganization)
          changeboardNameInputVal('')
+         closeAddBoardModal()
       }
 
+      const closeAddBoardModal = () => {
+         updateAddBoardModalState(false)
+      }
+
+      const openAddBoardModal = () => {
+         updateAddBoardModalState(true)
+      }
+
+      const { taskManagementStore } = getInjectedProps()
+      const { profileDetails } = taskManagementStore
       return (
          <Popup
             trigger={
-               <AddBoardContainer>
+               <AddBoardContainer onClick={openAddBoardModal}>
                   <BsPlus size={30} />
-                  <p>Create New Board</p>
+                  <AddBoardTriggerText>
+                     {createNewBoardTriggerText}
+                  </AddBoardTriggerText>
                </AddBoardContainer>
             }
-            modal
+            modal={true}
+            open={addBoardModalState}
+            onOpen={openAddBoardModal}
+            onClose={closeAddBoardModal}
          >
-            {close => (
-               <ModalMainContainer>
-                  <ModalContainer>
-                     <CloseBtn onClick={close}>
-                        <GrFormClose color='#64748B' size={24} />
-                     </CloseBtn>
-                     <BoardNameInput
-                        placeholder='Add board title'
-                        onChange={event =>
-                           changeboardNameInputVal(event.target.value)
-                        }
-                        value={boardNameInputVal}
-                     />
-                     <h2>{`Narendra's Workspace`}</h2>
-                     <div>
-                        <CreateBoardBtn onClick={onAddNewBoard}>
-                           Create Board
-                        </CreateBoardBtn>
-                     </div>
-                  </ModalContainer>
-               </ModalMainContainer>
-            )}
+            <ModalMainContainer>
+               <ModalContainer>
+                  <CloseBtn onClick={closeAddBoardModal}>
+                     <GrFormClose color='#64748B' size={24} />
+                  </CloseBtn>
+                  <BoardNameInput
+                     placeholder='Add board title'
+                     onChange={event =>
+                        changeboardNameInputVal(event.target.value)
+                     }
+                     value={boardNameInputVal}
+                  />
+                  <WorkspacesLabelText>{`${profileDetails.fullName}'s Workspace`}</WorkspacesLabelText>
+                  <CreateBoardBtnContainer>
+                     <CreateBoardBtn onClick={onAddNewBoard}>
+                        {createBoardBtnText}
+                     </CreateBoardBtn>
+                  </CreateBoardBtnContainer>
+               </ModalContainer>
+            </ModalMainContainer>
          </Popup>
       )
    })

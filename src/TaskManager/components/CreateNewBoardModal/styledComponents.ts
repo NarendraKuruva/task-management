@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import Modal from 'react-modal'
 
 export const BoardNameInput = styled.input`
    background: #a7b1bf;
@@ -26,6 +27,8 @@ export const BoardNameInput = styled.input`
       color: #f4f4f4;
    }
 `
+
+export const CreateBoardBtnContainer = styled.div``
 export const CreateBoardBtn = styled.button`
    display: flex;
    flex-direction: row;
@@ -58,6 +61,10 @@ export const CreateBoardModalContainer = styled.div`
    width: 50vw;
 `
 export const ModalMainContainer = styled.div`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: transparent;
    @media (max-width: 786px) {
       height: 100vh;
       display: flex;
@@ -111,3 +118,6 @@ export const AddBoardContainer = styled.div`
       width: 90vw;
    }
 `
+export const AddBoardTriggerText = styled.p``
+
+export const WorkspacesLabelText = styled.h2``

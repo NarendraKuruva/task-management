@@ -7,6 +7,7 @@ import { BiSearchAlt2 } from 'react-icons/bi'
 import { IoChevronDown, IoCloseSharp } from 'react-icons/io5'
 import Popup from 'reactjs-popup'
 import OrganizationModel from '../../stores/models/OrganizationsModel'
+import TaskManagementStore from '../../stores/TaskManagementStore'
 import OrganizationsStore from '../../stores/OrganizationsStore'
 import {
    OrganizationContainer,
@@ -44,9 +45,19 @@ interface HeaderProps {
 
 interface InjectedProps extends HeaderProps {
    organizationsStore: OrganizationsStore
+   taskManagementStore: TaskManagementStore
 }
 
-const Header = inject('organizationsStore')(
+const organizationsLabelText = 'Organizations'
+const workspaceLabelText = 'Workspace'
+const boardsLabelText = 'Boards'
+const appName = 'Task Manager'
+const logoutBtnText = 'Log Out'
+
+const Header = inject(
+   'organizationsStore',
+   'taskManagementStore'
+)(
    observer(
       (props: HeaderProps): JSX.Element => {
          const getInjectedProps = (): InjectedProps => props as InjectedProps
@@ -84,9 +95,9 @@ const Header = inject('organizationsStore')(
             )
          }
 
-         const { organizationsStore } = getInjectedProps()
+         const { organizationsStore, taskManagementStore } = getInjectedProps()
          const { organizationsList } = organizationsStore
-
+         const { profileDetails } = taskManagementStore
          return (
             <HeaderContainer>
                <OrganizationAndBoardsContainer>
@@ -100,7 +111,7 @@ const Header = inject('organizationsStore')(
                      trigger={
                         <OrganizationsTriggerContainer>
                            <OrganizationsContainer>
-                              <p>Organizations</p>
+                              <p>{organizationsLabelText}</p>
                               <IoChevronDown />
                            </OrganizationsContainer>
                            <OrganizationContainer>
@@ -113,28 +124,32 @@ const Header = inject('organizationsStore')(
                      closeOnDocumentClick
                      mouseLeaveDelay={300}
                      mouseEnterDelay={0}
-                     contentStyle={{ padding: '0px', border: 'none' }}
                      arrow={false}
                   >
-                     <OrganizationsListMainContainer>
-                        <OrganizationsListContainer>
-                           <OrganizationsCloseIconContainer>
-                              <IoCloseSharp onClick={close} />
-                           </OrganizationsCloseIconContainer>
-                           <WorkspaceTextDecoration>
-                              Workspace
-                           </WorkspaceTextDecoration>
-                           {Array.from(
-                              organizationsList.values()
-                           ).map(eachOrganization =>
-                              renderOrganizationListItem(eachOrganization)
-                           )}
-                        </OrganizationsListContainer>
-                     </OrganizationsListMainContainer>
+                     {close => (
+                        <OrganizationsListMainContainer>
+                           <OrganizationsListContainer>
+                              <OrganizationsCloseIconContainer>
+                                 <IoCloseSharp
+                                    onClick={close}
+                                    cursor='pointer'
+                                 />
+                              </OrganizationsCloseIconContainer>
+                              <WorkspaceTextDecoration>
+                                 {workspaceLabelText}
+                              </WorkspaceTextDecoration>
+                              {Array.from(
+                                 organizationsList.values()
+                              ).map(eachOrganization =>
+                                 renderOrganizationListItem(eachOrganization)
+                              )}
+                           </OrganizationsListContainer>
+                        </OrganizationsListMainContainer>
+                     )}
                   </Popup>
                   <BoardsContainer>
                      <BoardsLogoImg src='https://res.cloudinary.com/deiiiaxpc/image/upload/v1648731221/task_management/logologo_to5kyl.png' />
-                     <BoardsText>Boards</BoardsText>
+                     <BoardsText>{boardsLabelText}</BoardsText>
                   </BoardsContainer>
                   <SearchIconContainer>
                      <BiSearchAlt2 color='#ffffff' />
@@ -143,17 +158,19 @@ const Header = inject('organizationsStore')(
 
                <AppNameContainer>
                   <LogoImg src='https://res.cloudinary.com/deiiiaxpc/image/upload/v1648725480/task_management/Group_7400_sbqt0h.png' />
-                  <AppName>Task Manager</AppName>
+                  <AppName>{appName}</AppName>
                </AppNameContainer>
                <SearchAndLogoutContainer>
                   <SearchContainer>
                      <StyledSearchInput type='search' placeholder='Search' />
                      <BiSearchAlt2 color='#ffffff' />
                   </SearchContainer>
-                  <LogoutText onClick={onLogOut}>Log Out</LogoutText>
+                  <LogoutText onClick={onLogOut}>{logoutBtnText}</LogoutText>
                   <ProfileContainer>
-                     {/* <ProfileInitials>{profileDetails.initials}</ProfileInitials> */}
-                     <ProfileInitials>NK</ProfileInitials>
+                     <ProfileInitials>
+                        {profileDetails.initials}
+                     </ProfileInitials>
+                     {/* <ProfileInitials>NK</ProfileInitials> */}
                   </ProfileContainer>
                </SearchAndLogoutContainer>
             </HeaderContainer>

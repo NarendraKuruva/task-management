@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { History } from 'history'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { inject, observer } from 'mobx-react'
-import { match } from 'react-router-dom'
 import { BsPlus } from 'react-icons/bs'
 import { IoCloseSharp } from 'react-icons/io5'
 import Popup from 'reactjs-popup'
-import TaskManagementStore from '../../stores/TaskManagementStore'
+import ColumnsStore from '../../stores/ColumnsStore'
 import Header from '../Header'
 import Loading from '../LoadingPage'
 import Column from '../Column'
+import getOrganizationsHOC from '../HOC'
 import {
    AddColumnBtn,
    AddColumnBtnAndCloseContainer,
@@ -22,297 +22,291 @@ import {
    ColumnsContainer,
    ColumnsListContainer
 } from './styledComponents'
-interface BoardProps {
-   match: match<Params>
-   history: History
+
+interface InjectedProps {
+   columnsStore: ColumnsStore
 }
 
-interface Params {
+interface BoardDetailsParams {
    id: string
 }
-interface InjectedProps extends BoardProps {
-   taskManagementStore: TaskManagementStore
-}
-@inject('taskManagementStore')
-@observer
-class BoardDetailedView extends Component<BoardProps> {
-   getInjectedProps = (): InjectedProps => this.props as InjectedProps
 
-   componentDidMount() {
-      // console.log('board-detailed-view')
-      const { taskManagementStore } = this.getInjectedProps()
-      const { getBoardDetails } = taskManagementStore
+const addAnotherListContainerText = 'Add another list'
+const addListBtnText = 'Add List'
 
-      const { match } = this.props
-      const { params } = match
-      const { id } = params
-      getBoardDetails(id)
-   }
-   addNewColumn = () => {
-      const { match } = this.props
-      const { params } = match
-      const { id } = params
-      const { taskManagementStore } = this.getInjectedProps()
-      const {
-         columnNameInputVal,
-         addColumn,
-         getBoardDetails,
-         setInputValueEmpty
-      } = taskManagementStore
-      addColumn(columnNameInputVal, id)
-      setInputValueEmpty()
-      getBoardDetails(id)
-   }
-   constructor(props) {
-      super(props)
-      this.onDragEnd = this.onDragEnd.bind(this)
-   }
-   findIndexInGiven = (list, val) => {
-      const index = list.findIndex(each => each.id === val)
-      return index
-   }
-   reorder = (list, startIndex, endIndex) => {
-      const result = Array.from(list)
-      const [removed] = result.splice(startIndex, 1)
-      result.splice(endIndex, 0, removed)
+const BoardDetailedView = inject('columnsStore')(
+   observer(props => {
+      const getInjectedProps = (): InjectedProps => props as InjectedProps
+      const [columnNameInputVal, changecolumnNameInputVal] = useState('')
+      const { columnsStore } = getInjectedProps()
+      console.log(useParams(), 'useParams')
+      const { id } = useParams<BoardDetailsParams>()
+      console.log(id)
+      useEffect(() => {
+         const { columnsStore } = getInjectedProps()
+         const { getBoardColumns } = columnsStore
+         getBoardColumns(id)
+      }, [])
 
-      return result
-   }
-   onDragEnd = result => {
-      // console.log(result)
-      const { taskManagementStore } = this.getInjectedProps()
-      if (result.type === 'task') {
-         const {
-            boardColumns,
-            updateTasksInList,
-            updateTaskPosition,
-            updateTaskList
-         } = taskManagementStore
-         const { destination, source, draggableId } = result
-         if (!destination) {
-            return
-         }
-         if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-         ) {
-            return
-         }
+      const addNewColumn = () => {
+         const { columnsStore } = getInjectedProps()
+         const { addColumn } = columnsStore
+         addColumn(columnNameInputVal, id)
+         changecolumnNameInputVal('')
+         handleAddColumnModalState()
+      }
 
-         const startColumnIndex = this.findIndexInGiven(
-            boardColumns,
-            source.droppableId
-         )
-         const destinationColumnIndex = this.findIndexInGiven(
-            boardColumns,
-            destination.droppableId
-         )
+      const reorder = (list, startIndex, endIndex) => {
+         const result = list
+         const [removed] = result.splice(startIndex, 1)
+         result.splice(endIndex, 0, removed)
 
-         const startColumn = boardColumns[startColumnIndex]
-         const destinationColumn = boardColumns[destinationColumnIndex]
+         return result
+      }
 
-         const startColTasksList = startColumn.tasksInList
-         const destinationColTasks = destinationColumn.tasksInList
-         const movedTaskIndex = this.findIndexInGiven(
-            startColTasksList,
-            draggableId
-         )
-
-         if (startColumn === destinationColumn) {
-            const newTasksList = Array.from(startColumn.tasksInList)
-            newTasksList.splice(source.index, 1)
-            newTasksList.splice(
-               destination.index,
-               0,
-               startColTasksList[movedTaskIndex]
-            )
-            updateTasksInList(boardColumns[startColumnIndex].id, newTasksList)
-
-            const items = this.reorder(
-               startColTasksList,
-               source.index,
-               destination.index
-            )
-
-            let finalPos
-            if (destination.index === 0) {
-               finalPos = 'top'
-            } else if (destination.index === items.length - 1) {
-               finalPos = 'bottom'
-            } else {
-               // @ts-expect-error:testing purpose
-               const firstPosition = items[destination.index + 1].pos
-               // @ts-expect-error:testing purpose
-               const secondPosition = items[destination.index - 1].pos
-               finalPos = (firstPosition + secondPosition) / 2
+      const onDragEnd = result => {
+         // console.log(result)
+         const { columnsStore } = getInjectedProps()
+         if (result.type === 'task') {
+            const {
+               columnsList,
+               updateTasksInList,
+               updateTaskPosition,
+               updateTaskList
+            } = columnsStore
+            const { destination, source, draggableId } = result
+            if (!destination) {
+               return
             }
-            updateTaskPosition(draggableId, finalPos)
-         } else {
-            const newStartTasksList = Array.from(startColTasksList)
-            newStartTasksList.splice(source.index, 1)
-
-            const newDestinationColTasks = Array.from(destinationColTasks)
-            newDestinationColTasks.splice(
-               destination.index,
-               0,
-               startColTasksList[movedTaskIndex]
-            )
-
-            updateTasksInList(
-               boardColumns[startColumnIndex].id,
-               newStartTasksList
-            )
-            updateTasksInList(
-               boardColumns[destinationColumnIndex].id,
-               newDestinationColTasks
-            )
-
-            const items = newDestinationColTasks
-
-            let finalPos
-            if (destination.index === 0) {
-               finalPos = 'top'
-            } else if (destination.index === items.length - 1) {
-               finalPos = 'bottom'
-            } else {
-               const firstPosition = items[destination.index + 1].pos
-
-               const secondPosition = items[destination.index - 1].pos
-
-               finalPos = (firstPosition + secondPosition) / 2
+            if (
+               destination.droppableId === source.droppableId &&
+               destination.index === source.index
+            ) {
+               return
             }
 
-            updateTaskList(draggableId, destination.droppableId)
+            const startColumn = columnsList.get(source.droppableId)
+            const destinationColumn = columnsList.get(destination.droppableId)
+            if (startColumn === undefined || destinationColumn === undefined) {
+               return
+            }
+            // console.log(destinationColumn, startColumn)
+            const startColTasksMap = startColumn.tasksMap
+            const startColTasksList = Array.from(startColTasksMap.values())
+            const destinationColTasksMap = destinationColumn.tasksMap
+            const destinationColTasks = Array.from(
+               destinationColTasksMap.values()
+            )
+            const movedTask = startColTasksMap.get(draggableId)
+            if (movedTask === undefined) {
+               return
+            }
+            // console.log(movedTask)
+            if (startColumn === destinationColumn) {
+               // console.log('column-did not change')
+               const newTasksList = Array.from(startColumn.tasksMap.values())
+               newTasksList.splice(source.index, 1)
+               newTasksList.splice(destination.index, 0, movedTask)
 
-            updateTaskPosition(draggableId, finalPos)
+               const updatedTasksMap = new Map()
+               newTasksList.map(eachTask =>
+                  updatedTasksMap.set(eachTask.id, eachTask)
+               )
+
+               updateTasksInList(startColumn.id, updatedTasksMap)
+
+               const items = reorder(
+                  startColTasksList,
+                  source.index,
+                  destination.index
+               )
+
+               let finalPos
+               if (destination.index === 0) {
+                  finalPos = 'top'
+               } else if (destination.index === items.length - 1) {
+                  finalPos = 'bottom'
+               } else {
+                  const firstPosition = items[destination.index + 1].pos
+                  const secondPosition = items[destination.index - 1].pos
+                  finalPos = (firstPosition + secondPosition) / 2
+               }
+               updateTaskPosition(draggableId, finalPos)
+            } else {
+               const newStartTasksList = Array.from(startColTasksList)
+               newStartTasksList.splice(source.index, 1)
+               const updatedStartTasksMap = new Map()
+               newStartTasksList.map(eachTask =>
+                  updatedStartTasksMap.set(eachTask.id, eachTask)
+               )
+               const newDestinationColTasks = Array.from(destinationColTasks)
+               newDestinationColTasks.splice(destination.index, 0, movedTask)
+               const updatedDestinationColTasksMap = new Map()
+
+               newDestinationColTasks.map(eachTask =>
+                  updatedDestinationColTasksMap.set(eachTask.id, eachTask)
+               )
+
+               updateTasksInList(startColumn.id, updatedStartTasksMap)
+               updateTasksInList(
+                  destinationColumn.id,
+                  updatedDestinationColTasksMap
+               )
+
+               const items = newDestinationColTasks
+
+               let finalPos
+               if (destination.index === 0) {
+                  finalPos = 'top'
+               } else if (destination.index === items.length - 1) {
+                  finalPos = 'bottom'
+               } else {
+                  const firstPosition = items[destination.index + 1].pos
+
+                  const secondPosition = items[destination.index - 1].pos
+
+                  finalPos = (firstPosition + secondPosition) / 2
+               }
+
+               updateTaskList(draggableId, destination.droppableId)
+
+               updateTaskPosition(draggableId, finalPos)
+            }
+         }
+         if (result.type === 'column') {
+            const {
+               columnsList,
+               updateColumnOrder,
+               updateColumnPosition
+            } = columnsStore
+
+            const { source, destination, draggableId } = result
+            const columnsArray = Array.from(columnsList.values())
+            const items = reorder(columnsArray, source.index, destination.index)
+            const updatedColsMap = new Map()
+            for (const each of items) {
+               updatedColsMap.set(each.id, each)
+            }
+            updateColumnOrder(updatedColsMap)
+            let finalPosition!: string | number
+            if (destination.index === 0) {
+               finalPosition = 'top'
+            } else if (destination.index === items.length - 1) {
+               finalPosition = 'bottom'
+            } else {
+               const firstPosition = items[destination.index + 1].pos
+               const secondPosition = items[destination.index - 1].pos
+               finalPosition = (firstPosition + secondPosition) / 2
+            }
+            updateColumnPosition(draggableId, finalPosition)
          }
       }
-      if (result.type === 'column') {
-         const {
-            boardColumns,
-            updateColumnOrder,
-            updateColumnPosition
-         } = taskManagementStore
-         const { source, destination, draggableId } = result
-         const items = this.reorder(
-            boardColumns,
-            source.index,
-            destination.index
-         )
-         updateColumnOrder(items)
 
-         let finalPosition
-         if (destination.index === 0) {
-            finalPosition = 'top'
-         } else if (destination.index === items.length - 1) {
-            finalPosition = 'bottom'
-         } else {
-            // @ts-expect-error:testing purpose
-            const firstPosition = items[destination.index + 1].pos
-            // @ts-expect-error:testing purpose
-            const secondPosition = items[destination.index - 1].pos
-            finalPosition = (firstPosition + secondPosition) / 2
-         }
-         updateColumnPosition(draggableId, finalPosition)
-      }
-   }
-
-   renderLoading = () => (
-      <BoardDetailedViewMainContainer>
-         <Header />
-         <Loading />
-      </BoardDetailedViewMainContainer>
-   )
-
-   renderBoardDetailedView = () => {
-      const { taskManagementStore } = this.getInjectedProps()
-      const {
-         boardColumns,
-         columnNameInputVal,
-         onChangeColumnNameInput
-      } = taskManagementStore
-      return (
+      const renderLoading = () => (
          <BoardDetailedViewMainContainer>
             <Header />
-            <DragDropContext onDragEnd={this.onDragEnd}>
-               <ColumnsContainer>
-                  <Droppable
-                     droppableId={'droppableId'}
-                     type='column'
-                     direction='horizontal'
-                  >
-                     {provided => (
-                        <ColumnsListContainer
-                           ref={provided.innerRef}
-                           {...provided.droppableProps}
-                        >
-                           {boardColumns.map((eachCol, index) => (
-                              <Column
-                                 columnDetails={eachCol}
-                                 key={eachCol.id}
-                                 index={index}
-                              />
-                           ))}
-                           {provided.placeholder}
-                        </ColumnsListContainer>
-                     )}
-                  </Droppable>
-                  <AddListPopupMainContainer>
-                     <Popup
-                        trigger={
-                           <AddColumnContainer>
-                              <BsPlus size={25} />
-                              <AddColumnText>Add another list</AddColumnText>
-                           </AddColumnContainer>
-                        }
-                        position='center center'
-                        on='click'
-                        closeOnDocumentClick
-                        mouseLeaveDelay={300}
-                        mouseEnterDelay={0}
-                        arrow={false}
+            <Loading />
+         </BoardDetailedViewMainContainer>
+      )
+
+      const [addColumnModalState, updateAddColumnModalState] = useState(false)
+      const handleAddColumnModalState = () => {
+         updateAddColumnModalState(!addColumnModalState)
+      }
+      const handleCloseAddColModal = () => {
+         updateAddColumnModalState(false)
+         changecolumnNameInputVal('')
+      }
+
+      const renderBoardDetailedView = () => {
+         const { columnsStore } = getInjectedProps()
+         const { columnsList } = columnsStore
+         const columnsListArray = Array.from(columnsList.values())
+         return (
+            <BoardDetailedViewMainContainer>
+               <Header />
+               <DragDropContext onDragEnd={onDragEnd}>
+                  <ColumnsContainer>
+                     <Droppable
+                        droppableId={'droppableId'}
+                        type='column'
+                        direction='horizontal'
                      >
-                        {close => (
+                        {provided => (
+                           <ColumnsListContainer
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                           >
+                              {columnsListArray.map((eachCol, index) => (
+                                 <Column
+                                    columnDetails={eachCol}
+                                    key={eachCol.id}
+                                    index={index}
+                                 />
+                              ))}
+                              {provided.placeholder}
+                           </ColumnsListContainer>
+                        )}
+                     </Droppable>
+                     <AddListPopupMainContainer>
+                        <Popup
+                           trigger={
+                              <AddColumnContainer>
+                                 <BsPlus size={25} />
+                                 <AddColumnText>
+                                    {addAnotherListContainerText}
+                                 </AddColumnText>
+                              </AddColumnContainer>
+                           }
+                           position='center center'
+                           on='click'
+                           open={addColumnModalState}
+                           onOpen={handleAddColumnModalState}
+                           onClose={handleCloseAddColModal}
+                           closeOnDocumentClick
+                           mouseLeaveDelay={300}
+                           mouseEnterDelay={0}
+                           arrow={false}
+                        >
                            <AddListPopupContainer>
                               <AddColumnNameInput
                                  value={columnNameInputVal}
-                                 onChange={onChangeColumnNameInput}
+                                 onChange={event =>
+                                    changecolumnNameInputVal(event.target.value)
+                                 }
                               />
                               <AddColumnBtnAndCloseContainer>
                                  <AddColumnBtn
-                                    onClick={this.addNewColumn}
+                                    onClick={addNewColumn}
                                     type='button'
                                  >
-                                    Add List
+                                    {addListBtnText}
                                  </AddColumnBtn>
                                  <IoCloseSharp
                                     color='#64748B'
                                     size={26}
-                                    onClick={close}
+                                    onClick={handleAddColumnModalState}
                                     cursor={'pointer'}
                                  />
                               </AddColumnBtnAndCloseContainer>
                            </AddListPopupContainer>
-                        )}
-                     </Popup>
-                  </AddListPopupMainContainer>
-               </ColumnsContainer>
-            </DragDropContext>
-         </BoardDetailedViewMainContainer>
-      )
-   }
-
-   render() {
-      const { taskManagementStore } = this.getInjectedProps()
-      const { tasksApiStatus } = taskManagementStore
-      switch (tasksApiStatus) {
-         case 200:
-            return this.renderBoardDetailedView()
-         case 400:
-            return this.renderLoading()
-         default:
-            return this.renderLoading()
+                        </Popup>
+                     </AddListPopupMainContainer>
+                  </ColumnsContainer>
+               </DragDropContext>
+            </BoardDetailedViewMainContainer>
+         )
       }
-   }
-}
-export default BoardDetailedView
+
+      const { columnsListApiStatus } = columnsStore
+      switch (columnsListApiStatus) {
+         case 200:
+            return renderBoardDetailedView()
+         case 400:
+            return renderLoading()
+         default:
+            return renderLoading()
+      }
+   })
+)
+export default getOrganizationsHOC(BoardDetailedView)

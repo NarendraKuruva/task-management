@@ -5,14 +5,13 @@ import {
    LoadingMainContainer,
    LoadingText
 } from './styledComponents'
-const renderLoader = () => (
-   <Loader type='ThreeDots' color='#ffffff' height={50} width={50} />
-)
+
+const loadingText = 'Loading'
 
 const Loading = (): JSX.Element => (
    <LoadingMainContainer>
       <LoadingContainer>
-         <LoadingText>Loading</LoadingText>
+         <LoadingText>{loadingText}</LoadingText>
          <Loader type='ThreeDots' color='#ffffff' height={30} width={30} />
       </LoadingContainer>
    </LoadingMainContainer>

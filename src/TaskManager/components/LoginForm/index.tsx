@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { API_KEY } from '../../constants/TaskManagementConstants'
 import {
@@ -17,17 +17,21 @@ interface LoginFormProps {
    location: any
 }
 
-class LoginForm extends Component<LoginFormProps> {
-   componentDidMount(): void {
-      const hashKey = this.getHashKeyFromLocationAfterLogin()
+const appName = 'Task Manager'
+const loginFormDescription = 'Task tracking for your everyday needs.'
+const logingBtnText = 'LOG IN WITH TRELLO'
+
+const LoginForm = (props: LoginFormProps): JSX.Element => {
+   useEffect((): void => {
+      const hashKey = getHashKeyFromLocationAfterLogin()
 
       if (hashKey.token) {
-         this.setAccessTokenInLocalStorage(hashKey.token)
+         setAccessTokenInLocalStorage(hashKey.token)
       }
-   }
+   }, [])
 
-   getHashKeyFromLocationAfterLogin = () => {
-      const { location } = this.props
+   const getHashKeyFromLocationAfterLogin = () => {
+      const { location } = props
       const { hash } = location
       const hashKey = { token: '' }
       const queryParams = new URLSearchParams(window.location.search)
@@ -49,13 +53,13 @@ class LoginForm extends Component<LoginFormProps> {
       return hashKey
    }
 
-   setAccessTokenInLocalStorage = (token: string): void => {
+   const setAccessTokenInLocalStorage = (token: string): void => {
       localStorage.setItem('pa_token', token)
       localStorage.setItem('pa_expires', (new Date().getTime() + 60).toString())
       window.location.replace('/trello/')
    }
 
-   isDevelopmentEnvironment = (): boolean => {
+   const isDevelopmentEnvironment = (): boolean => {
       if (
          process.env.NODE_ENV === 'development' ||
          window.location.hostname === 'localhost'
@@ -65,55 +69,53 @@ class LoginForm extends Component<LoginFormProps> {
       return false
    }
 
-   getReturnURL = (): string => {
-      if (this.isDevelopmentEnvironment()) {
+   const getReturnURL = (): string => {
+      if (isDevelopmentEnvironment()) {
          return 'http://localhost:3004/login'
       }
       return 'https://narentrello.ccbp.tech/login'
    }
 
-   openLoginModal = (): void => {
+   const openLoginModal = (): void => {
       const apiKey = API_KEY
 
-      const returnURL = this.getReturnURL()
+      const returnURL = getReturnURL()
 
       const url = `https://trello.com/1/OAuthAuthorizeToken?expiration=never&name=TaskManager&scope=read,write,account&key=${apiKey}&callback_method=fragment&return_url=${returnURL}`
 
       window.open(url, '_self', ``)
    }
 
-   submitForm = async (event): Promise<void> => {
+   const submitForm = async (event): Promise<void> => {
       event.preventDefault()
-      this.openLoginModal()
+      openLoginModal()
    }
 
-   render(): JSX.Element {
-      const token = localStorage.getItem('pa_token')
-      if (token !== null) {
-         return <Redirect to='/trello' />
-      }
-      return (
-         <LoginFormContainer>
-            <TitleContainer>
-               <LoginWebsiteTitleLogo
-                  src='https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-logo.png'
-                  alt='title logo'
-               />
-               <Title>Task Manager</Title>
-            </TitleContainer>
-            <FormContainer onSubmit={this.submitForm}>
-               <LoginWebsiteLogoDesktopImage
-                  src='https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-login.png'
-                  alt='website logo'
-               />
-               <FormDescription className='form-description'>
-                  Task tracking for your everyday needs.
-               </FormDescription>
-               <LoginButton type='submit'>LOG IN WITH TRELLO</LoginButton>
-            </FormContainer>
-         </LoginFormContainer>
-      )
+   const token = localStorage.getItem('pa_token')
+   if (token !== null) {
+      return <Redirect to='/trello' />
    }
+   return (
+      <LoginFormContainer>
+         <TitleContainer>
+            <LoginWebsiteTitleLogo
+               src='https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-logo.png'
+               alt='title logo'
+            />
+            <Title>{appName}</Title>
+         </TitleContainer>
+         <FormContainer onSubmit={submitForm}>
+            <LoginWebsiteLogoDesktopImage
+               src='https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-login.png'
+               alt='website logo'
+            />
+            <FormDescription className='form-description'>
+               {loginFormDescription}
+            </FormDescription>
+            <LoginButton type='submit'>{logingBtnText}</LoginButton>
+         </FormContainer>
+      </LoginFormContainer>
+   )
 }
 
 export default LoginForm

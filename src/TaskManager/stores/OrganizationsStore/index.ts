@@ -27,18 +27,16 @@ class OrganizationsStore {
             },
             response => {
                if (!response) return
-               console.log(response, 'organization-data')
                response.map(eachOrganization =>
                   this.organizationsList.set(
                      eachOrganization.id,
                      new OrganizationModel(eachOrganization)
                   )
                )
-               console.log(this.organizationsList, 'organizationsMap')
             }
          )
          .catch(error => {
-            console.log(error)
+            alert(error)
          })
    }
 
@@ -71,7 +69,7 @@ class OrganizationsStore {
             }
          )
          .catch(error => {
-            console.log(error)
+            alert(error)
          })
    }
    @action.bound addOrganization(name: string) {
@@ -92,7 +90,7 @@ class OrganizationsStore {
             }
          )
          .catch(error => {
-            console.log(error)
+            alert(error)
          })
    }
 }
