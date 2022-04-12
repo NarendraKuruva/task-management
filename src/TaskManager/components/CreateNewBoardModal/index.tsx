@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Popup from 'reactjs-popup'
-import { inject, observer } from 'mobx-react'
-import { GrFormClose } from 'react-icons/gr'
+import { observer } from 'mobx-react'
 import { BsPlus } from 'react-icons/bs'
-import BoardsStore from '../../stores/BoardsStore'
-import TaskManagementStore from '../../stores/TaskManagementStore'
+
+import {
+   BoardsContext,
+   TaskManagementContext
+} from '../../../Common/stores/index.context'
+
+import CloseIcon from '../../Icons/CloseIcon'
+
 import {
    AddBoardContainer,
    AddBoardTriggerText,
    BoardNameInput,
-   CloseBtn,
+   CloseIconContainer,
    CreateBoardBtn,
    CreateBoardBtnContainer,
    ModalContainer,
@@ -20,48 +25,39 @@ import {
 interface CreateBoardModalProps {
    idOrganization: string
 }
-interface InjectedProps extends CreateBoardModalProps {
-   boardsStore: BoardsStore
-   taskManagementStore: TaskManagementStore
-}
 
-const createNewBoardTriggerText = 'Create New Board'
+const createNewBoardTriggerText = 'Create new board'
 const createBoardBtnText = 'Create Board'
 
-const CreateBoard = inject(
-   'boardsStore',
-   'taskManagementStore'
-)(
-   observer((props: CreateBoardModalProps) => {
-      const getInjectedProps = (): InjectedProps => props as InjectedProps
-
+const CreateBoard = observer(
+   (props: CreateBoardModalProps): JSX.Element => {
+      const boardsContextObj = useContext(BoardsContext)
+      const taskManagementContextObj = useContext(TaskManagementContext)
       const [boardNameInputVal, changeboardNameInputVal] = useState('')
       const [addBoardModalState, updateAddBoardModalState] = useState(false)
 
-      const onAddNewBoard = () => {
-         const { boardsStore } = getInjectedProps()
+      const closeAddBoardModal = (): void => {
+         updateAddBoardModalState(false)
+      }
+
+      const openAddBoardModal = (): void => {
+         updateAddBoardModalState(true)
+      }
+
+      const onAddNewBoard = (): void => {
          const { idOrganization } = props
-         const { addBoard } = boardsStore
+         const { addBoard } = boardsContextObj
          addBoard(boardNameInputVal, idOrganization)
          changeboardNameInputVal('')
          closeAddBoardModal()
       }
 
-      const closeAddBoardModal = () => {
-         updateAddBoardModalState(false)
-      }
-
-      const openAddBoardModal = () => {
-         updateAddBoardModalState(true)
-      }
-
-      const { taskManagementStore } = getInjectedProps()
-      const { profileDetails } = taskManagementStore
+      const { profileDetails } = taskManagementContextObj
       return (
          <Popup
             trigger={
                <AddBoardContainer onClick={openAddBoardModal}>
-                  <BsPlus size={30} />
+                  <BsPlus size={30} color='#475569' />
                   <AddBoardTriggerText>
                      {createNewBoardTriggerText}
                   </AddBoardTriggerText>
@@ -74,9 +70,13 @@ const CreateBoard = inject(
          >
             <ModalMainContainer>
                <ModalContainer>
-                  <CloseBtn onClick={closeAddBoardModal}>
-                     <GrFormClose color='#64748B' size={24} />
-                  </CloseBtn>
+                  <CloseIconContainer>
+                     <CloseIcon
+                        color={'#64748b'}
+                        onClick={closeAddBoardModal}
+                        cursor={'pointer'}
+                     />
+                  </CloseIconContainer>
                   <BoardNameInput
                      placeholder='Add board title'
                      onChange={event =>
@@ -94,7 +94,7 @@ const CreateBoard = inject(
             </ModalMainContainer>
          </Popup>
       )
-   })
+   }
 )
 
 export default CreateBoard

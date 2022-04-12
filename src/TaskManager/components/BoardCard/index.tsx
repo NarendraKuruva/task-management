@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import BoardModel from '../../stores/models/BoardModel'
-import OrganizationModel from '../../stores/models/OrganizationsModel'
+
 import { BoardCardContainer, BoardName } from './styledComponents'
 
 interface OrganizationCardProps {

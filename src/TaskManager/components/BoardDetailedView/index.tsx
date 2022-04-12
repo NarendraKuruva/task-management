@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { BsPlus } from 'react-icons/bs'
 import { IoCloseSharp } from 'react-icons/io5'
 import Popup from 'reactjs-popup'
-import ColumnsStore from '../../stores/ColumnsStore'
+
+import { ColumnsContext } from '../../../Common/stores/index.context'
+
 import Header from '../Header'
 import Loading from '../LoadingPage'
 import Column from '../Column'
 import getOrganizationsHOC from '../HOC'
+
 import {
    AddColumnBtn,
    AddColumnBtnAndCloseContainer,
@@ -23,34 +26,51 @@ import {
    ColumnsListContainer
 } from './styledComponents'
 
-interface InjectedProps {
-   columnsStore: ColumnsStore
-}
-
 interface BoardDetailsParams {
    id: string
+}
+interface DragEndResultTypes {
+   draggableId: string
+   type: string
+   source: {
+      index: number
+      droppableId: string
+   }
+   reason: string
+   mode: string
+   destination: {
+      droppableId: string
+      index: number
+   }
+   combine: null
 }
 
 const addAnotherListContainerText = 'Add another list'
 const addListBtnText = 'Add List'
 
-const BoardDetailedView = inject('columnsStore')(
-   observer(props => {
-      const getInjectedProps = (): InjectedProps => props as InjectedProps
+const BoardDetailedView = observer(
+   (): JSX.Element => {
       const [columnNameInputVal, changecolumnNameInputVal] = useState('')
-      const { columnsStore } = getInjectedProps()
-      console.log(useParams(), 'useParams')
+      const [addColumnModalState, updateAddColumnModalState] = useState(false)
+      const columnContextObj = useContext(ColumnsContext)
       const { id } = useParams<BoardDetailsParams>()
-      console.log(id)
-      useEffect(() => {
-         const { columnsStore } = getInjectedProps()
-         const { getBoardColumns } = columnsStore
+
+      useEffect((): void => {
+         const { getBoardColumns } = columnContextObj
          getBoardColumns(id)
       }, [])
 
-      const addNewColumn = () => {
-         const { columnsStore } = getInjectedProps()
-         const { addColumn } = columnsStore
+      const handleAddColumnModalState = (): void => {
+         updateAddColumnModalState(!addColumnModalState)
+      }
+
+      const handleCloseAddColModal = (): void => {
+         updateAddColumnModalState(false)
+         changecolumnNameInputVal('')
+      }
+
+      const addNewColumn = (): void => {
+         const { addColumn } = columnContextObj
          addColumn(columnNameInputVal, id)
          changecolumnNameInputVal('')
          handleAddColumnModalState()
@@ -64,16 +84,18 @@ const BoardDetailedView = inject('columnsStore')(
          return result
       }
 
-      const onDragEnd = result => {
-         // console.log(result)
-         const { columnsStore } = getInjectedProps()
+      const onDragEnd = (result: DragEndResultTypes): void => {
+         console.log(result)
+         if (!result.destination || !result.source) {
+            return
+         }
          if (result.type === 'task') {
             const {
                columnsList,
                updateTasksInList,
                updateTaskPosition,
                updateTaskList
-            } = columnsStore
+            } = columnContextObj
             const { destination, source, draggableId } = result
             if (!destination) {
                return
@@ -90,7 +112,6 @@ const BoardDetailedView = inject('columnsStore')(
             if (startColumn === undefined || destinationColumn === undefined) {
                return
             }
-            // console.log(destinationColumn, startColumn)
             const startColTasksMap = startColumn.tasksMap
             const startColTasksList = Array.from(startColTasksMap.values())
             const destinationColTasksMap = destinationColumn.tasksMap
@@ -101,9 +122,7 @@ const BoardDetailedView = inject('columnsStore')(
             if (movedTask === undefined) {
                return
             }
-            // console.log(movedTask)
             if (startColumn === destinationColumn) {
-               // console.log('column-did not change')
                const newTasksList = Array.from(startColumn.tasksMap.values())
                newTasksList.splice(source.index, 1)
                newTasksList.splice(destination.index, 0, movedTask)
@@ -178,7 +197,7 @@ const BoardDetailedView = inject('columnsStore')(
                columnsList,
                updateColumnOrder,
                updateColumnPosition
-            } = columnsStore
+            } = columnContextObj
 
             const { source, destination, draggableId } = result
             const columnsArray = Array.from(columnsList.values())
@@ -202,25 +221,15 @@ const BoardDetailedView = inject('columnsStore')(
          }
       }
 
-      const renderLoading = () => (
+      const renderLoading = (): JSX.Element => (
          <BoardDetailedViewMainContainer>
             <Header />
             <Loading />
          </BoardDetailedViewMainContainer>
       )
 
-      const [addColumnModalState, updateAddColumnModalState] = useState(false)
-      const handleAddColumnModalState = () => {
-         updateAddColumnModalState(!addColumnModalState)
-      }
-      const handleCloseAddColModal = () => {
-         updateAddColumnModalState(false)
-         changecolumnNameInputVal('')
-      }
-
-      const renderBoardDetailedView = () => {
-         const { columnsStore } = getInjectedProps()
-         const { columnsList } = columnsStore
+      const renderBoardDetailedView = (): JSX.Element => {
+         const { columnsList } = columnContextObj
          const columnsListArray = Array.from(columnsList.values())
          return (
             <BoardDetailedViewMainContainer>
@@ -298,7 +307,7 @@ const BoardDetailedView = inject('columnsStore')(
          )
       }
 
-      const { columnsListApiStatus } = columnsStore
+      const { columnsListApiStatus } = columnContextObj
       switch (columnsListApiStatus) {
          case 200:
             return renderBoardDetailedView()
@@ -307,6 +316,6 @@ const BoardDetailedView = inject('columnsStore')(
          default:
             return renderLoading()
       }
-   })
+   }
 )
 export default getOrganizationsHOC(BoardDetailedView)

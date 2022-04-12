@@ -13,9 +13,6 @@ export const BoardNameInput = styled.input`
    width: 80%;
    ::placeholder,
    ::-webkit-input-placeholder {
-      height: 20px;
-      left: 528px;
-      top: 448px;
       font-family: 'Inter';
       font-style: normal;
       font-weight: 700;
@@ -39,18 +36,10 @@ export const CreateBoardBtn = styled.button`
    font-size: 14px;
    line-height: 16px;
    color: #ffffff;
-   margin-top: 30px;
-`
-export const CreateBoardModalContainer = styled.div`
-   position: absolute;
-   left: 0%;
-   right: 0%;
-   top: 0%;
-   bottom: 0%;
-   background: #ffffff;
-   box-shadow: 0px 8px 40px;
-   border-radius: 4px;
-   width: 50vw;
+   margin-top: 32px;
+   @media (max-width: 786px) {
+      margin-top: 24px;
+   }
 `
 export const ModalMainContainer = styled.div`
    @media (max-width: 786px) {
@@ -63,9 +52,9 @@ export const ModalMainContainer = styled.div`
 `
 export const ModalContainer = styled.div`
    background: #ffffff;
-   box-shadow: 0px 8px 40px;
+   box-shadow: 0px 8px 40px rgba(0, 33, 89, 0.16);
    border-radius: 4px;
-   padding: 30px;
+   padding: 24px 24px 48px 48px;
    display: flex;
    flex-direction: column;
    width: 514px;
@@ -81,9 +70,6 @@ export const ModalContainer = styled.div`
    }
 `
 
-export const CloseBtn = styled.button`
-   align-self: flex-end;
-`
 export const AddOrganizationContainer = styled.div`
    cursor: pointer;
    display: flex;
@@ -95,7 +81,6 @@ export const AddOrganizationContainer = styled.div`
    top: 365px;
    border-radius: 4px;
    background: #ffffff;
-   margin: 5px;
    :hover {
       background: #2fa9f1;
       color: #ffffff;
@@ -104,5 +89,24 @@ export const AddOrganizationContainer = styled.div`
       width: 90vw;
    }
 `
-
-export const WorkspaceName = styled.h2``
+export const AddOrganizationTriggerText = styled.p`
+   font-family: 'Inter';
+   font-style: normal;
+   font-weight: 500;
+   font-size: 18px;
+   line-height: 24px;
+   color: #475569;
+`
+export const WorkspaceName = styled.h2`
+   font-family: 'Inter';
+   font-style: normal;
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 24px;
+   color: #475569;
+   padding-top: 8px;
+`
+export const CloseIconContainer = styled.div`
+   align-self: flex-end;
+   padding: 6px;
+`

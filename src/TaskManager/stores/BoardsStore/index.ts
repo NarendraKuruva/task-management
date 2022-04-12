@@ -1,21 +1,22 @@
 import { bindPromiseWithOnSuccess } from '@ib/mobx-promise'
 import { action, observable } from 'mobx'
-import TaskManagementService from '../../services/TaskManagementService'
+import BoardsService from '../../services/BoardsService'
 import BoardModel from '../models/BoardModel'
 class BoardsStore {
    @observable boardsList!: Map<string, BoardModel>
    @observable boardsApiStatus!: number
-   taskManagementService: TaskManagementService
-   constructor(taskManagementService: TaskManagementService) {
+   boardsService: BoardsService
+   constructor(boardsService: BoardsService) {
       this.boardsList = new Map()
       this.boardsApiStatus = 0
-      this.taskManagementService = taskManagementService
+      this.boardsService = boardsService
    }
 
-   @action.bound getOrganizationBoards(organizationId: string) {
+   @action.bound
+   getOrganizationBoards = (organizationId: string): Promise<any> => {
       this.boardsApiStatus = 0
       this.boardsList.clear()
-      const OrganizationsBoardsPromiseObj = this.taskManagementService.getBoardsInOrganization(
+      const OrganizationsBoardsPromiseObj = this.boardsService.getBoardsInOrganization(
          organizationId
       )
       return bindPromiseWithOnSuccess(OrganizationsBoardsPromiseObj)
@@ -34,11 +35,14 @@ class BoardsStore {
             alert(error)
          })
    }
-   @action.bound addBoard(name: string, idOrganization: string) {
-      const AddBoardPromiseObj = this.taskManagementService.addBoard(
+
+   @action.bound
+   addBoard = (name: string, idOrganization: string): Promise<any> => {
+      const AddBoardPromiseObj = this.boardsService.addBoard(
          name,
          idOrganization
       )
+
       return bindPromiseWithOnSuccess(AddBoardPromiseObj)
          .to(
             status => {

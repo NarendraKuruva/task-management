@@ -1,76 +1,35 @@
 import styled from 'styled-components'
+import tw from 'twin.macro'
 
 export const BoardDetailedViewMainContainer = styled.div`
-   background: #0079bf;
-   min-height: 100vh;
+   ${tw`min-h-full bg-[#0079bf]`};
 `
 
 export const ColumnsContainer = styled.div`
-   display: flex;
-   flex-direction: row;
-   padding-top: 20px;
-   padding-left: 38px;
-   padding-right: 38px;
-   min-width: 100vw;
-   height: 90vh;
-   background: #0079bf;
-   overflow: auto;
+   ${tw`min-w-full pr-12 pl-12 pt-6 flex flex-row overflow-auto h-[90vh] bg-[#0079bf]`};
 `
 export const ColumnsListContainer = styled.div`
-   display: flex;
+   ${tw`flex`};
 `
 export const AddListPopupMainContainer = styled.div``
 export const AddColumnContainer = styled.div`
-   cursor: pointer;
-   // margin-top: 20px;
-   background: #2c90d0;
-   border-radius: 4px;
-   color: #ffffff;
-   width: 254px;
-   padding: 10px;
-   margin-right: 10px;
-   display: flex;
-   align-items: center;
+   ${tw`cursor-pointer rounded text-white p-2.5 mr-2.5 flex items-center bg-[#2c90d0] w-[254px]`};
 `
 export const AddColumnText = styled.p`
    font-family: 'Inter';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 14px;
-   color: #ffffff;
+   ${tw`not-italic font-normal text-sm text-white`};
 `
 
 export const AddListPopupContainer = styled.div`
-   margin-top: 60px;
-   width: 254px;
-   padding: 10px;
-   background: #ebecf0;
-   border-radius: 4px;
+   ${tw`py-2 px-4 rounded mt-[60px] bg-[#ebecf0] w-[254px]`}
 `
 export const AddColumnNameInput = styled.input`
-   border: 1px solid #0967d2;
-   box-sizing: border-box;
-   border-radius: 4px;
-   width: 222px;
-   padding-left: 10px;
-   padding-right: 10px;
-   padding-bottom: 5px;
-   padding-top: 5px;
+   ${tw`border border-solid box-border rounded px-2.5 py-1.5 border-[ #0967d2] w-[222px]`};
 `
 export const AddColumnBtnAndCloseContainer = styled.div`
-   display: flex;
-   align-items: center;
-   margin-top: 15px;
+   ${tw`flex items-center mt-3.5`}
 `
 export const AddColumnBtn = styled.button`
-   padding: 8px 16px;
-   background: #1d4ed8;
-   border-radius: 4px;
+   ${tw`px-4 py-2 rounded not-italic font-semibold text-sm text-center text-white bg-[#1d4ed8] mr-2.5`}
    font-family: 'Inter';
-   font-style: normal;
-   font-weight: 600;
-   font-size: 14px;
-   line-height: 16px;
-   text-align: center;
-   color: #ffffff;
 `

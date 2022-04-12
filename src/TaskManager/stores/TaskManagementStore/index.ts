@@ -1,12 +1,11 @@
 import React from 'react'
-import { API_INITIAL } from '@ib/api-constants'
 import { bindPromiseWithOnSuccess } from '@ib/mobx-promise'
 import { action, observable } from 'mobx'
+
 import TaskManagementService from '../../services/TaskManagementService'
-import OrganizationModel from '../models/OrganizationsModel'
+
 import BoardModel from '../models/BoardModel'
 import ColumnModel from '../models/ColumnModel'
-import TaskModel from '../models/TaskModel'
 import ProfileModel from '../models/ProfileModel'
 
 class TaskManagementStore {
@@ -17,7 +16,7 @@ class TaskManagementStore {
    @observable organizationsApiStatus!: number
    @observable taskManagementService: TaskManagementService
    profileDetails!: ProfileModel
-   constructor(taskManagementService) {
+   constructor(taskManagementService: TaskManagementService) {
       this.profileDetails
       this.organizationBoards = []
       this.organizationBoardsApiStatus = 0
@@ -27,19 +26,17 @@ class TaskManagementStore {
       this.tasksApiStatus = 0
    }
 
-   @action.bound getMyProfileData = () => {
+   @action.bound
+   getMyProfileData(): Promise<any> {
       const organizationsPromiseObj = this.taskManagementService.getMyOrganizations()
       return bindPromiseWithOnSuccess(organizationsPromiseObj)
          .to(
             status => {
-               // this.organizationsApiStatus = status
                console.log()
             },
             response => {
                if (!response) return
-               console.log(response)
                this.profileDetails = new ProfileModel(response)
-               console.log(this.profileDetails)
             }
          )
          .catch(error => {

@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Popup from 'reactjs-popup'
-import { inject, observer } from 'mobx-react'
-import { GrFormClose } from 'react-icons/gr'
+import { observer } from 'mobx-react'
 import { BsPlus } from 'react-icons/bs'
-import TaskManagementStore from '../../stores/TaskManagementStore'
-import OrganizationsStore from '../../stores/OrganizationsStore'
+
+import {
+   OrganizationsContext,
+   TaskManagementContext
+} from '../../../Common/stores/index.context'
+
+import CloseIcon from '../../Icons/CloseIcon'
+
 import {
    AddOrganizationContainer,
+   AddOrganizationTriggerText,
    BoardNameInput,
-   CloseBtn,
+   CloseIconContainer,
    CreateBoardBtn,
    CreateBoardBtnContainer,
    ModalContainer,
@@ -16,44 +22,35 @@ import {
    WorkspaceName
 } from './styledComponents'
 
-interface InjectedProps {
-   organizationsStore: OrganizationsStore
-   taskManagementStore: TaskManagementStore
-}
-
-const createOrganizationTriggerText = 'Create New Organization'
+const createOrganizationTriggerText = 'Create new organization'
 const createOrganizationBtnText = 'Create Organization'
 const createOrganizationInputPlaceholder = 'Add organization title'
 
-const AddOrganizationModal = inject(
-   'organizationsStore',
-   'taskManagementStore'
-)(
-   observer(props => {
+const AddOrganizationModal = observer(
+   (): JSX.Element => {
       const [organizationNameInputVal, changeOrganizationInput] = useState('')
-      const getInjectedProps = (): InjectedProps => props as InjectedProps
+      const organizationsContextObj = useContext(OrganizationsContext)
+      const taskManagementServiceObj = useContext(TaskManagementContext)
       const [
          addOrganizationModalState,
          changeAddOrganizationModalState
       ] = useState(false)
 
-      const openAddOrgModal = () => {
+      const openAddOrgModal = (): void => {
          changeAddOrganizationModalState(true)
       }
 
-      const closeAddOrgModal = () => {
+      const closeAddOrgModal = (): void => {
          changeAddOrganizationModalState(false)
       }
 
-      const onAddNewOrganization = () => {
-         const { organizationsStore } = getInjectedProps()
-         const { addOrganization } = organizationsStore
+      const onAddNewOrganization = (): void => {
+         const { addOrganization } = organizationsContextObj
          addOrganization(organizationNameInputVal)
          changeOrganizationInput('')
          closeAddOrgModal()
       }
-      const { taskManagementStore } = getInjectedProps()
-      const { profileDetails } = taskManagementStore
+      const { profileDetails } = taskManagementServiceObj
       const name = profileDetails.fullName
       const workspaceName = `${name}'s Workspaces`
 
@@ -61,7 +58,10 @@ const AddOrganizationModal = inject(
          <Popup
             trigger={
                <AddOrganizationContainer>
-                  <BsPlus size={30} /> <p>{createOrganizationTriggerText}</p>
+                  <BsPlus size={30} color='#475569' />
+                  <AddOrganizationTriggerText>
+                     {createOrganizationTriggerText}
+                  </AddOrganizationTriggerText>
                </AddOrganizationContainer>
             }
             position='top right'
@@ -72,9 +72,13 @@ const AddOrganizationModal = inject(
          >
             <ModalMainContainer>
                <ModalContainer>
-                  <CloseBtn onClick={closeAddOrgModal}>
-                     <GrFormClose color='#64748B' size={24} />
-                  </CloseBtn>
+                  <CloseIconContainer>
+                     <CloseIcon
+                        color={'#64748b'}
+                        onClick={closeAddOrgModal}
+                        cursor={'pointer'}
+                     />
+                  </CloseIconContainer>
                   <BoardNameInput
                      placeholder={createOrganizationInputPlaceholder}
                      onChange={event =>
@@ -92,7 +96,7 @@ const AddOrganizationModal = inject(
             </ModalMainContainer>
          </Popup>
       )
-   })
+   }
 )
 
 export default AddOrganizationModal
