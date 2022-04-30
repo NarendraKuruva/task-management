@@ -1,25 +1,28 @@
-import React, { useEffect } from 'react'
-import { inject, observer } from 'mobx-react'
+import React, { useContext, useEffect } from 'react'
+import { observer } from 'mobx-react'
 import { useParams } from 'react-router-dom'
 import { MdPersonOutline } from 'react-icons/md'
-import Header from '../Header'
-import BoardCard from '../BoardCard'
-import CreateBoard from '../CreateNewBoardModal'
-import Loading from '../LoadingPage'
-import OrganizationsStore from '../../stores/OrganizationsStore'
-import getOrganizationsHOC from '../HOC'
-import BoardsStore from '../../stores/BoardsStore'
-import TaskManagementStore from '../../stores/TaskManagementStore'
+
+import {
+   BoardsContext,
+   OrganizationsContext,
+   TaskManagementContext
+} from '../../../Common/stores/index.context'
+
 import {
    NO_BOARDS_IN_ORG_TEXT,
    YOUR_BOARDS_TEXT
 } from '../../constants/TaskManagementConstants'
 
+import getOrganizationsHOC from '../HOC'
+import Header from '../Header'
+import BoardCard from '../BoardCard'
+import CreateBoard from '../CreateNewBoardModal'
+import Loading from '../LoadingPage'
+
 import {
    BoardsContainer,
    OrganizationPageContainer,
-   WorkspaceBoardsMainContainer,
-   WorkspaceBoardsContainer,
    WorkspaceBoardsText,
    WorkspaceBoardsTextContainer,
    WorkspaceHeading,
@@ -32,44 +35,35 @@ import {
 interface OrganizationParams {
    id: string
 }
-interface InjectedProps {
-   organizationsStore: OrganizationsStore
-   boardsStore: BoardsStore
-   taskManagementStore: TaskManagementStore
-}
 
-const Organization = inject(
-   'organizationsStore',
-   'boardsStore',
-   'taskManagementStore'
-)(
-   observer(props => {
-      const getInjectedProps = (): InjectedProps => props as InjectedProps
-      const { boardsStore } = getInjectedProps()
+const Organization = observer(
+   (): JSX.Element => {
       const { id } = useParams<OrganizationParams>()
-      useEffect(() => {
-         const { organizationsStore, boardsStore } = getInjectedProps()
-         const { setActiveOrganization } = organizationsStore
-         const { getOrganizationBoards } = boardsStore
+      const organizationsContextObj = useContext(OrganizationsContext)
+      const taskManagementServiceObj = useContext(TaskManagementContext)
+      const boardsContextObj = useContext(BoardsContext)
+      useEffect((): void => {
+         const { setActiveOrganization } = organizationsContextObj
+         const { getOrganizationBoards } = boardsContextObj
          getOrganizationBoards(id)
+
          setActiveOrganization(id)
       }, [])
 
-      const renderLoading = () => (
+      const renderLoading = (): JSX.Element => (
          <OrganizationPageContainer>
             <Header />
             <Loading />
          </OrganizationPageContainer>
       )
 
-      const renderOrganizationBoards = () => {
-         const { boardsStore, taskManagementStore } = getInjectedProps()
-         const { boardsList } = boardsStore
+      const renderOrganizationBoards = (): JSX.Element => {
+         const { boardsList } = boardsContextObj
          const boardsArray = Array.from(boardsList.values())
          const organizationsText =
             boardsArray.length === 0 ? NO_BOARDS_IN_ORG_TEXT : YOUR_BOARDS_TEXT
 
-         const { profileDetails } = taskManagementStore
+         const { profileDetails } = taskManagementServiceObj
          const myName = profileDetails.fullName
          const workspaceHeadingText = `${myName}'s Workspace`
          return (
@@ -82,31 +76,27 @@ const Organization = inject(
                      </WorkspaceInitialContainer>
                      <WorkspaceHeading>{workspaceHeadingText}</WorkspaceHeading>
                   </WorkspaceHeadingContainer>
-                  <WorkspaceBoardsMainContainer>
-                     <WorkspaceBoardsContainer>
-                        <WorkspaceBoardsTextContainer>
-                           <MdPersonOutline color='#ffffff' size={25} />
-                           <WorkspaceBoardsText>
-                              {organizationsText}
-                           </WorkspaceBoardsText>
-                        </WorkspaceBoardsTextContainer>
-                        <BoardsContainer>
-                           {boardsArray.map(eachBoard => (
-                              <BoardCard
-                                 boardDetails={eachBoard}
-                                 key={eachBoard.id}
-                              />
-                           ))}
-                           <CreateBoard idOrganization={id} />
-                        </BoardsContainer>
-                     </WorkspaceBoardsContainer>
-                  </WorkspaceBoardsMainContainer>
+                  <WorkspaceBoardsTextContainer>
+                     <MdPersonOutline color='#ffffff' size={25} />
+                     <WorkspaceBoardsText>
+                        {organizationsText}
+                     </WorkspaceBoardsText>
+                  </WorkspaceBoardsTextContainer>
+                  <BoardsContainer>
+                     {boardsArray.map(eachBoard => (
+                        <BoardCard
+                           boardDetails={eachBoard}
+                           key={eachBoard.id}
+                        />
+                     ))}
+                     <CreateBoard idOrganization={id} />
+                  </BoardsContainer>
                </OrganizationsContainer>
             </OrganizationPageContainer>
          )
       }
 
-      const { boardsApiStatus } = boardsStore
+      const { boardsApiStatus } = boardsContextObj
       switch (boardsApiStatus) {
          case 200:
             return renderOrganizationBoards()
@@ -115,7 +105,7 @@ const Organization = inject(
          default:
             return renderLoading()
       }
-   })
+   }
 )
 
 export default getOrganizationsHOC(Organization)

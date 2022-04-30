@@ -1,17 +1,13 @@
 import styled from 'styled-components'
 
 export const HeaderContainer = styled.div`
-   //    position: absolute;
    height: 90px;
-   left: 0px;
-   right: 0px;
-   top: 0px;
    background: #0067a3;
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding-left: 38px;
-   padding-right: 38px;
+   padding-left: 48px;
+   padding-right: 48px;
    @media (max-width: 786px) {
       height: 56px;
       padding-left: 15px;
@@ -24,7 +20,11 @@ export const OrganizationAndBoardsContainer = styled.div`
 `
 
 export const HomeIconContainer = styled.div`
-   //    position: absolute;
+   -webkit-tap-highlight-color: red;
+   :focus {
+      outline: 0;
+      box-shadow: none;
+   }
    margin-right: 12px;
    width: 41px;
    height: 41px;
@@ -40,17 +40,20 @@ export const HomeIconContainer = styled.div`
       margin-right: 8px;
       width: 24px;
       height: 24px;
-      left: 16px;
-      top: 16px;
+   }
+`
+export const HomeIconImg = styled.img`
+   width: 24px;
+   @media (max-width: 786px) {
+      width: 13px;
+      height: 13.33px;
    }
 `
 export const OrganizationContainer = styled.div`
-   //    position: absolute;
    width: 24px;
    height: 24px;
-   left: 16px;
-   top: 16px;
    border-radius: 4px;
+
    background: #4e97c2;
    display: flex;
    flex-direction: column;
@@ -70,15 +73,24 @@ export const OrganizationsTriggerContainer = styled.div`
 `
 export const OrganizationsContainer = styled.div`
    color: #ffffff;
-   padding: 5px;
+   padding: 9px 16px 9px 16px;
+   width: 160px;
    background: #4e97c2;
    border-radius: 4px;
    margin-right: 12px;
    display: flex;
+   justify-content: space-between;
    align-items: center;
    @media (max-width: 786px) {
       display: none;
    }
+`
+export const OrganizationsTriggerText = styled.p`
+   font-family: 'HK Grotesk';
+   font-style: normal;
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 24px;
 `
 export const OrganizationItemContainer = styled.div`
    cursor: pointer;
@@ -112,15 +124,8 @@ export const OrganizationSelectItem = styled.li`
    line-height: 24px;
    color: #475569;
    padding-left: 15px;
-   // border-left: 39px solid #0079bf;
 `
-export const OrganizationsListMainContainer = styled.div`
-   // @media (max-width: 786px) {
-   //    height: 90vh;
-   //    display: flex;
-   //    align-items: flex-end;
-   // }
-`
+export const OrganizationsListMainContainer = styled.div``
 
 export const OrganizationsListContainer = styled.div`
    height: auto;
@@ -133,7 +138,6 @@ export const OrganizationsListContainer = styled.div`
    display: flex;
    flex-direction: column;
    @media (max-width: 786px) {
-      // width: 100vw;
       border-bottom-right-radius: 0px;
       border-bottom-left-radius: 0px;
       box-shadow: none;
@@ -155,12 +159,11 @@ export const WorkspaceTextDecoration = styled.p`
    letter-spacing: 0.4px;
    text-transform: uppercase;
    color: #7b8794;
-   // margin-top: 10px;
    margin-bottom: 10px;
 `
 export const BoardsContainer = styled.div`
    width: 136px;
-   height: 40px;
+   height: 41px;
    left: 273px;
    top: 26px;
    background: #4e97c2;
@@ -168,15 +171,13 @@ export const BoardsContainer = styled.div`
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding-left: 10px;
-   padding-right: 10px;
+   padding: 8px 16px;
    @media (max-width: 786px) {
       justify-content: center;
       width: 24px;
       height: 24px;
       left: 72px;
       top: 16px;
-      background: #2fa9f1;
       padding: 0px;
    }
 `
@@ -193,11 +194,6 @@ export const BoardsLogoImg = styled.img`
    }
 `
 export const BoardsText = styled.p`
-   //    position: absolute;
-   width: 68px;
-   height: 24px;
-   left: 325px;
-   top: 34px;
    font-family: 'Inter';
    font-style: normal;
    font-weight: 500;
@@ -213,11 +209,11 @@ export const AppNameContainer = styled.div`
    align-items: center;
 `
 export const LogoImg = styled.img`
-   //    position: absolute;
    width: 24px;
    height: 24px;
    left: 628px;
    top: 33px;
+   margin-right: 8px;
    @media (max-width: 786px) {
       width: 16px;
       height: 16px;
@@ -226,7 +222,6 @@ export const LogoImg = styled.img`
    }
 `
 export const AppName = styled.p`
-   //    position: absolute;
    width: 152px;
    height: 42px;
    left: 660px;
@@ -256,19 +251,14 @@ export const SearchAndLogoutContainer = styled.div`
 export const SearchContainer = styled.div`
    display: flex;
    align-items: center;
+   justify-content: space-between;
    padding: 8px 16px;
-   position: static;
    width: 264px;
    height: 40px;
    left: 0px;
    top: 0px;
    background: #4e97c2;
    border-radius: 4px;
-   flex: none;
-   order: 0;
-   align-self: stretch;
-   flex-grow: 0;
-   margin: 4px 0px;
    margin-right: 12px;
    @media (max-width: 786px) {
       display: none;
@@ -276,6 +266,17 @@ export const SearchContainer = styled.div`
 `
 export const StyledSearchInput = styled.input`
    background: transparent;
+   ::placeholder,
+   ::-webkit-input-placeholder {
+      color: #ffffff;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+      opacity: 0.8;
+      margin: 0px 4px;
+   }
 `
 export const SearchIconContainer = styled(HomeIconContainer)`
    margin-left: 8px;
@@ -285,14 +286,9 @@ export const SearchIconContainer = styled(HomeIconContainer)`
 `
 
 export const LogoutText = styled.p`
-   //    position: absolute;
-   left: 88.19%;
-   right: 7.01%;
-   top: 3.22%;
-   bottom: 94.43%;
    font-family: 'Inter';
    font-style: normal;
-   font-weight: 800;
+   font-weight: 500;
    font-size: 18px;
    line-height: 24px;
    color: #ffffff;
@@ -308,11 +304,8 @@ export const LogoutText = styled.p`
 `
 
 export const ProfileContainer = styled.div`
-   //    position: absolute;
    width: 41px;
    height: 41px;
-   left: 1351px;
-   top: 25px;
    display: flex;
    align-items: center;
    justify-content: center;
@@ -327,19 +320,11 @@ export const ProfileContainer = styled.div`
 `
 
 export const ProfileInitials = styled.p`
-   //    position: absolute;
-   left: 10%;
-   right: 10%;
-   top: 10%;
-   bottom: 10%;
    font-family: 'HK Grotesk';
    font-style: normal;
    font-weight: 600;
    font-size: 16px;
    line-height: 24px;
-   display: flex;
-   align-items: center;
-   text-align: center;
    color: #0967d2;
    @media (max-width: 786px) {
       width: 18px;

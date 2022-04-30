@@ -1,37 +1,19 @@
 import styled from 'styled-components'
 import TextareaAutosize from 'react-textarea-autosize'
+import tw from 'twin.macro'
 
-export const ColumnMainContainer = styled.div`
-   // display: flex;
-   // flex-direction: column;
-`
+export const ColumnMainContainer = styled.div``
 
 export const ColumnContainer = styled.div`
-   min-width: 254px;
-   min-height: 100px;
-   padding: 10px;
-   background: #ebecf0;
-   border-radius: 4px;
-   margin-right: 10px;
-   display: flex;
-   flex-direction: column;
-   // max-height: 85vh;
-   flex-grow: 1;
+   ${tw`min-w-[254px] min-h-[100px] px-2.5 py-2 bg-[#ebecf0] rounded mr-2 flex flex-col flex-grow`};
 `
 
 export const ColumnNameAndActionsContainer = styled.div`
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   color: #475569;
+   ${tw`flex justify-between text-base items-center text-[#475569]`}
 `
 export const ColumnName = styled.p`
    font-family: 'Inter';
-   font-style: normal;
-   font-weight: 500;
-   font-size: 16px;
-   line-height: 24px;
-   color: #475569;
+   ${tw`not-italic font-medium text-base text-[#475569]`};
 `
 
 export const ColumnActionsContainer = styled.div``
@@ -40,73 +22,33 @@ export const HideBtn = styled.button``
 export const DeleteBtn = styled.button``
 
 export const ActionsPopupTrigger = styled.p`
-   font-size: 20px;
-   font-weight: bold;
-   cursor: pointer;
+   ${tw`font-bold text-xl cursor-pointer`};
 `
 export const TasksListContainer = styled.div`
-   // overflow-y: auto;
-   flex-grow: 1;
-   display: flex;
-   flex-direction: column;
+   ${tw`flex flex-col flex-grow-[1]`};
 `
 export const AddTaskPopupMainContainer = styled.div``
 
 export const AddTaskTextContainer = styled.div`
-   cursor: pointer;
+   ${tw`cursor-pointer not-italic font-normal text-sm flex items-center text-[#475569] mt-2.5 hover:bg-[#cbd5e1] hover:rounded `}
    font-family: 'Inter';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 14px;
-   line-height: 24px;
-   display: flex;
-   align-items: center;
-   color: #475569;
-   margin-top: 10px;
-   :hover {
-      background: #cbd5e1;
-   }
 `
 export const AddTaskBtn = styled.button``
 
 export const AddTaskPopupContainer = styled.div`
-   background: #ebecf0;
-   width: 254px;
-   padding: 10px;
-   margin-top: 60px;
-   display: flex;
-   flex-direction: column;
-   border-bottom-left-radius: 4px;
-   border-bottom-right-radius: 4px;
+   ${tw`bg-[#ebecf0] w-[254px] p-2.5 mt-[60px] flex flex-col rounded-b`};
 `
 
 export const PopupTaskTitleInput = styled(TextareaAutosize)`
-   width: 230px;
-   min-height: 50px;
-   border-radius: 4px;
-   padding: 6px;
+   ${tw`w-[230px] min-h-[50px] rounded p-1.5`};
 `
 export const AddTaskPopupBtn = styled.button`
-   background: #1d4ed8;
-   border-radius: 4px;
-   padding: 8px 16px;
-   height: 32px;
-   width: 95px;
+   ${tw`bg-[#1d4ed8] rounded py-2 px-4 h-[32px] w-[95px]  text-sm font-semibold not-italic text-white text-center`}
+
    font-family: Inter;
-   font-size: 14px;
-   font-weight: 600;
-   line-height: 16px;
    letter-spacing: 0px;
-   text-align: center;
    font-family: 'Inter';
-   font-style: normal;
-   font-weight: 600;
-   font-size: 14px;
-   line-height: 16px;
-   color: #ffffff;
 `
 export const AddTaskAndCloseBtnsContainer = styled.div`
-   display: flex;
-   align-items: center;
-   margin-top: 10px;
+   ${tw`flex items-center mt-2.5`};
 `

@@ -11,15 +11,13 @@ export const OrganizationCardContainer = styled.div`
    left: 507px;
    top: 365px;
    border-radius: 4px;
-   margin: 05px;
+   margin-right: 16px;
+   margin-bottom: 16px;
    @media (max-width: 380px) {
       width: 90vw;
    }
 `
 export const OrganizationName = styled.p`
-   height: 24px;
-   left: 267px;
-   top: 432px;
    font-family: 'Inter';
    font-style: normal;
    font-weight: 500;

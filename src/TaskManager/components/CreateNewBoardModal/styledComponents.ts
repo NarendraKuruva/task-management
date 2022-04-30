@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Modal from 'react-modal'
 
 export const BoardNameInput = styled.input`
    background: #a7b1bf;
@@ -14,16 +13,11 @@ export const BoardNameInput = styled.input`
    width: 80%;
    ::placeholder,
    ::-webkit-input-placeholder {
-      width: 116px;
-      height: 20px;
-      left: 528px;
-      top: 448px;
       font-family: 'Inter';
       font-style: normal;
       font-weight: 700;
       font-size: 16px;
       line-height: 20px;
-      text-align: center;
       color: #f4f4f4;
    }
 `
@@ -43,23 +37,12 @@ export const CreateBoardBtn = styled.button`
    font-size: 14px;
    line-height: 16px;
    color: #ffffff;
-   margin-top: 30px;
+   margin-top: 32px;
    @media (max-width: 786px) {
-      margin-bottom: 5px;
-      margin-top: 10px;
+      margin-top: 24px;
    }
 `
-export const CreateBoardModalContainer = styled.div`
-   position: absolute;
-   left: 0%;
-   right: 0%;
-   top: 0%;
-   bottom: 0%;
-   background: #ffffff;
-   box-shadow: 0px 8px 40px;
-   border-radius: 4px;
-   width: 50vw;
-`
+
 export const ModalMainContainer = styled.div`
    display: flex;
    justify-content: center;
@@ -76,9 +59,9 @@ export const ModalMainContainer = styled.div`
 
 export const ModalContainer = styled.div`
    background: #ffffff;
-   box-shadow: 0px 8px 40px;
+   box-shadow: 0px 8px 40px rgba(0, 33, 89, 0.16);
    border-radius: 4px;
-   padding: 30px;
+   padding: 24px 24px 48px 48px;
    display: flex;
    flex-direction: column;
    width: 514px;
@@ -94,10 +77,10 @@ export const ModalContainer = styled.div`
    }
 `
 
-export const CloseBtn = styled.button`
+export const CloseIconContainer = styled.div`
    align-self: flex-end;
+   padding: 6px;
 `
-
 export const AddBoardContainer = styled.div`
    cursor: pointer;
    display: flex;
@@ -109,7 +92,8 @@ export const AddBoardContainer = styled.div`
    top: 365px;
    border-radius: 4px;
    background: #ffffff;
-   margin: 5px;
+   margin-right: 15px;
+   margin-bottom: 15px;
    :hover {
       background: #2fa9f1;
       color: #ffffff;
@@ -118,6 +102,21 @@ export const AddBoardContainer = styled.div`
       width: 90vw;
    }
 `
-export const AddBoardTriggerText = styled.p``
+export const AddBoardTriggerText = styled.p`
+   font-family: 'Inter';
+   font-style: normal;
+   font-weight: 500;
+   font-size: 18px;
+   line-height: 24px;
+   color: #334155;
+`
 
-export const WorkspacesLabelText = styled.h2``
+export const WorkspacesLabelText = styled.h2`
+   font-family: 'Inter';
+   font-style: normal;
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 24px;
+   color: #475569;
+   padding-top: 8px;
+`

@@ -1,0 +1,63 @@
+{
+   "id": "625402ee3aa544730e64ea57",
+   "badges": {
+      "attachmentsByType": {
+         "trello": {
+            "board": 0,
+            "card": 0
+         }
+      },
+      "location": false,
+      "votes": 0,
+      "viewingMemberVoted": false,
+      "subscribed": false,
+      "fogbugz": "",
+      "checkItems": 0,
+      "checkItemsChecked": 0,
+      "checkItemsEarliestDue": null,
+      "comments": 0,
+      "attachments": 0,
+      "description": false,
+      "due": null,
+      "dueComplete": false,
+      "start": null
+   },
+   "checkItemStates": [],
+   "closed": false,
+   "dueComplete": false,
+   "dateLastActivity": "2022-04-11T16:22:50.830Z",
+   "desc": "",
+   "descData": {
+      "emoji": {}
+   },
+   "due": null,
+   "dueReminder": null,
+   "email": null,
+   "idBoard": "624b213b325e912b170c61a6",
+   "idChecklists": [],
+   "idList": "62517f5c5bba4814dfb5270b",
+   "idMembers": [],
+   "idMembersVoted": [],
+   "idShort": 96,
+   "idAttachmentCover": null,
+   "labels": [],
+   "idLabels": [],
+   "manualCoverAttachment": false,
+   "name": "Beautiful\n",
+   "pos": 1867838.0304193795,
+   "shortLink": "1FIbyUad",
+   "shortUrl": "https://trello.com/c/1FIbyUad",
+   "start": null,
+   "subscribed": false,
+   "url": "https://trello.com/c/1FIbyUad/96-beautiful",
+   "cover": {
+      "idAttachment": null,
+      "color": null,
+      "idUploadedBackground": null,
+      "size": "normal",
+      "brightness": "dark",
+      "idPlugin": null
+   },
+   "isTemplate": false,
+   "cardRole": null
+}

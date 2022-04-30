@@ -1,11 +1,10 @@
 import { observable } from 'mobx'
-import TaskManagementService from '../../../services/TaskManagementService'
+
 import TaskModel from '../TaskModel'
 
 class ColumnModel {
    id!: string
    columnName!: string
-   service!: TaskManagementService
    closed!: boolean
    idBoard!: string
    pos!: number

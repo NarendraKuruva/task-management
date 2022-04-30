@@ -1,0 +1,449 @@
+[
+   {
+      "id": "62540c024854a96563f66762",
+      "creationMethod": null,
+      "name": "learning90099742",
+      "credits": [],
+      "displayName": "Learning",
+      "desc": "",
+      "descData": {
+         "emoji": {}
+      },
+      "domain": null,
+      "idBoards": [],
+      "idEnterprise": null,
+      "idMemberCreator": "6170edd83d0f3b3ebfa209e1",
+      "invited": false,
+      "invitations": [],
+      "limits": {
+         "orgs": {
+            "totalMembersPerOrg": {
+               "status": "ok",
+               "disableAt": 4000,
+               "warnAt": 3200
+            },
+            "freeBoardsPerOrg": {
+               "status": "ok",
+               "disableAt": 10,
+               "warnAt": 3
+            }
+         }
+      },
+      "memberships": [
+         {
+            "idMember": "6170edd83d0f3b3ebfa209e1",
+            "memberType": "admin",
+            "unconfirmed": false,
+            "deactivated": false,
+            "id": "62540c024854a96563f66764"
+         }
+      ],
+      "prefs": {
+         "permissionLevel": "private",
+         "orgInviteRestrict": [],
+         "boardInviteRestrict": "any",
+         "externalMembersDisabled": false,
+         "associatedDomain": null,
+         "googleAppsVersion": 1,
+         "boardVisibilityRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "boardDeleteRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "attachmentRestrictions": null
+      },
+      "powerUps": [],
+      "products": [],
+      "pendingProduct": null,
+      "billableMemberCount": 1,
+      "activeBillableMemberCount": 1,
+      "billableCollaboratorCount": 0,
+      "url": "https://trello.com/learning90099742",
+      "website": null,
+      "logoHash": null,
+      "logoUrl": null,
+      "premiumFeatures": [
+         "additionalBoardBackgrounds",
+         "additionalStickers",
+         "customBoardBackgrounds",
+         "customEmoji",
+         "customStickers",
+         "plugins"
+      ],
+      "promotions": [],
+      "enterpriseJoinRequest": {},
+      "standardVariation": null,
+      "availableLicenseCount": null,
+      "maximumLicenseCount": null,
+      "ixUpdate": "2",
+      "teamType": null
+   },
+   {
+      "id": "62517192767192242100f71c",
+      "creationMethod": null,
+      "name": "myself50040506",
+      "credits": [],
+      "displayName": "MySelf",
+      "desc": "",
+      "descData": {
+         "emoji": {}
+      },
+      "domain": null,
+      "idBoards": ["62517299eb6f9824bb21278e", "625180c26517278b84d77180"],
+      "idEnterprise": null,
+      "idMemberCreator": "6170edd83d0f3b3ebfa209e1",
+      "invited": false,
+      "invitations": [],
+      "limits": {
+         "orgs": {
+            "totalMembersPerOrg": {
+               "status": "ok",
+               "disableAt": 4000,
+               "warnAt": 3200
+            },
+            "freeBoardsPerOrg": {
+               "status": "ok",
+               "disableAt": 10,
+               "warnAt": 3
+            }
+         }
+      },
+      "memberships": [
+         {
+            "idMember": "6170edd83d0f3b3ebfa209e1",
+            "memberType": "admin",
+            "unconfirmed": false,
+            "deactivated": false,
+            "id": "62517192767192242100f71e"
+         }
+      ],
+      "prefs": {
+         "permissionLevel": "private",
+         "orgInviteRestrict": [],
+         "boardInviteRestrict": "any",
+         "externalMembersDisabled": false,
+         "associatedDomain": null,
+         "googleAppsVersion": 1,
+         "boardVisibilityRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "boardDeleteRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "attachmentRestrictions": null
+      },
+      "powerUps": [],
+      "products": [],
+      "pendingProduct": null,
+      "billableMemberCount": 1,
+      "activeBillableMemberCount": 1,
+      "billableCollaboratorCount": 0,
+      "url": "https://trello.com/myself50040506",
+      "website": null,
+      "logoHash": null,
+      "logoUrl": null,
+      "premiumFeatures": [
+         "additionalBoardBackgrounds",
+         "additionalStickers",
+         "customBoardBackgrounds",
+         "customEmoji",
+         "customStickers",
+         "plugins"
+      ],
+      "promotions": [],
+      "enterpriseJoinRequest": {},
+      "standardVariation": null,
+      "availableLicenseCount": null,
+      "maximumLicenseCount": null,
+      "ixUpdate": "2",
+      "teamType": null
+   },
+   {
+      "id": "624dad2215a5f55c21fb49e9",
+      "creationMethod": null,
+      "name": "narendra158",
+      "credits": [],
+      "displayName": "Narendra",
+      "desc": "",
+      "descData": {
+         "emoji": {}
+      },
+      "domain": null,
+      "idBoards": [
+         "624daf883da9bd5b7ac0350a",
+         "624ed1d72990eb42ff148030",
+         "624f1510f0160524a3aba73f",
+         "625104d2d71d8540291b6b52",
+         "62510653f2062077b50db729",
+         "625115976472dd136a2aa598",
+         "625115f994c7a413f4c23a16",
+         "6251163405424806f047fd0f",
+         "625170a5df39c76e7caa6c13"
+      ],
+      "idEnterprise": null,
+      "idMemberCreator": "6170edd83d0f3b3ebfa209e1",
+      "invited": false,
+      "invitations": [],
+      "limits": {
+         "orgs": {
+            "totalMembersPerOrg": {
+               "status": "ok",
+               "disableAt": 4000,
+               "warnAt": 3200
+            },
+            "freeBoardsPerOrg": {
+               "status": "warn",
+               "disableAt": 10,
+               "warnAt": 3,
+               "count": 8
+            }
+         }
+      },
+      "memberships": [
+         {
+            "idMember": "6170edd83d0f3b3ebfa209e1",
+            "memberType": "admin",
+            "unconfirmed": false,
+            "deactivated": false,
+            "id": "624dad2215a5f55c21fb49eb"
+         }
+      ],
+      "prefs": {
+         "permissionLevel": "private",
+         "orgInviteRestrict": [],
+         "boardInviteRestrict": "any",
+         "externalMembersDisabled": false,
+         "associatedDomain": null,
+         "googleAppsVersion": 1,
+         "boardVisibilityRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "boardDeleteRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "attachmentRestrictions": null
+      },
+      "powerUps": [],
+      "products": [],
+      "pendingProduct": null,
+      "billableMemberCount": 1,
+      "activeBillableMemberCount": 1,
+      "billableCollaboratorCount": 0,
+      "url": "https://trello.com/narendra158",
+      "website": null,
+      "logoHash": null,
+      "logoUrl": null,
+      "premiumFeatures": [
+         "additionalBoardBackgrounds",
+         "additionalStickers",
+         "customBoardBackgrounds",
+         "customEmoji",
+         "customStickers",
+         "plugins"
+      ],
+      "promotions": [],
+      "enterpriseJoinRequest": {},
+      "standardVariation": null,
+      "availableLicenseCount": null,
+      "maximumLicenseCount": null,
+      "ixUpdate": "6",
+      "teamType": null
+   },
+   {
+      "id": "6251808b5bf40e878a68ddd5",
+      "creationMethod": null,
+      "name": "neworganisation21",
+      "credits": [],
+      "displayName": "New Organisation",
+      "desc": "",
+      "descData": {
+         "emoji": {}
+      },
+      "domain": null,
+      "idBoards": ["6253c2c95173343cf445a2e4"],
+      "idEnterprise": null,
+      "idMemberCreator": "6170edd83d0f3b3ebfa209e1",
+      "invited": false,
+      "invitations": [],
+      "limits": {
+         "orgs": {
+            "totalMembersPerOrg": {
+               "status": "ok",
+               "disableAt": 4000,
+               "warnAt": 3200
+            },
+            "freeBoardsPerOrg": {
+               "status": "ok",
+               "disableAt": 10,
+               "warnAt": 3
+            }
+         }
+      },
+      "memberships": [
+         {
+            "idMember": "6170edd83d0f3b3ebfa209e1",
+            "memberType": "admin",
+            "unconfirmed": false,
+            "deactivated": false,
+            "id": "6251808b5bf40e878a68ddd7"
+         }
+      ],
+      "prefs": {
+         "permissionLevel": "private",
+         "orgInviteRestrict": [],
+         "boardInviteRestrict": "any",
+         "externalMembersDisabled": false,
+         "associatedDomain": null,
+         "googleAppsVersion": 1,
+         "boardVisibilityRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "boardDeleteRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "attachmentRestrictions": null
+      },
+      "powerUps": [],
+      "products": [],
+      "pendingProduct": null,
+      "billableMemberCount": 1,
+      "activeBillableMemberCount": 1,
+      "billableCollaboratorCount": 0,
+      "url": "https://trello.com/neworganisation21",
+      "website": null,
+      "logoHash": null,
+      "logoUrl": null,
+      "premiumFeatures": [
+         "additionalBoardBackgrounds",
+         "additionalStickers",
+         "customBoardBackgrounds",
+         "customEmoji",
+         "customStickers",
+         "plugins"
+      ],
+      "promotions": [],
+      "enterpriseJoinRequest": {},
+      "standardVariation": null,
+      "availableLicenseCount": null,
+      "maximumLicenseCount": null,
+      "ixUpdate": "2",
+      "teamType": null
+   },
+   {
+      "id": "6249d5c35d5d5c7d2184cfb9",
+      "creationMethod": null,
+      "name": "taskflow10",
+      "credits": [],
+      "displayName": "Taskflow",
+      "desc": "",
+      "descData": {
+         "emoji": {}
+      },
+      "domain": null,
+      "idBoards": [
+         "624b213b325e912b170c61a6",
+         "624bd27f16658e3365a6dc96",
+         "624da92d3b79357a47c92b18",
+         "624dadeca0313957c5ae2496"
+      ],
+      "idEnterprise": null,
+      "idMemberCreator": "6170edd83d0f3b3ebfa209e1",
+      "invited": false,
+      "invitations": [],
+      "limits": {
+         "orgs": {
+            "totalMembersPerOrg": {
+               "status": "ok",
+               "disableAt": 4000,
+               "warnAt": 3200
+            },
+            "freeBoardsPerOrg": {
+               "status": "warn",
+               "disableAt": 10,
+               "warnAt": 3,
+               "count": 4
+            }
+         }
+      },
+      "memberships": [
+         {
+            "idMember": "6170edd83d0f3b3ebfa209e1",
+            "memberType": "admin",
+            "unconfirmed": false,
+            "deactivated": false,
+            "id": "6249d5c45d5d5c7d2184cfbb"
+         }
+      ],
+      "prefs": {
+         "permissionLevel": "private",
+         "orgInviteRestrict": [],
+         "boardInviteRestrict": "any",
+         "externalMembersDisabled": false,
+         "associatedDomain": null,
+         "googleAppsVersion": 1,
+         "boardVisibilityRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "boardDeleteRestrict": {
+            "private": "org",
+            "org": "org",
+            "enterprise": "org",
+            "public": "org"
+         },
+         "attachmentRestrictions": null
+      },
+      "powerUps": [],
+      "products": [],
+      "pendingProduct": null,
+      "billableMemberCount": 1,
+      "activeBillableMemberCount": 1,
+      "billableCollaboratorCount": 0,
+      "url": "https://trello.com/taskflow10",
+      "website": null,
+      "logoHash": null,
+      "logoUrl": null,
+      "premiumFeatures": [
+         "additionalBoardBackgrounds",
+         "additionalStickers",
+         "customBoardBackgrounds",
+         "customEmoji",
+         "customStickers",
+         "plugins"
+      ],
+      "promotions": [],
+      "enterpriseJoinRequest": {},
+      "standardVariation": null,
+      "availableLicenseCount": null,
+      "maximumLicenseCount": null,
+      "ixUpdate": "10",
+      "teamType": null
+   }
+]

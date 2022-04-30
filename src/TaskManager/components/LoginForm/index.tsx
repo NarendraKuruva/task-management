@@ -1,6 +1,8 @@
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
+
 import { API_KEY } from '../../constants/TaskManagementConstants'
+
 import {
    FormContainer,
    FormDescription,
@@ -22,15 +24,7 @@ const loginFormDescription = 'Task tracking for your everyday needs.'
 const logingBtnText = 'LOG IN WITH TRELLO'
 
 const LoginForm = (props: LoginFormProps): JSX.Element => {
-   useEffect((): void => {
-      const hashKey = getHashKeyFromLocationAfterLogin()
-
-      if (hashKey.token) {
-         setAccessTokenInLocalStorage(hashKey.token)
-      }
-   }, [])
-
-   const getHashKeyFromLocationAfterLogin = () => {
+   const getHashKeyFromLocationAfterLogin = (): { token: string } => {
       const { location } = props
       const { hash } = location
       const hashKey = { token: '' }
@@ -52,12 +46,18 @@ const LoginForm = (props: LoginFormProps): JSX.Element => {
          })
       return hashKey
    }
-
    const setAccessTokenInLocalStorage = (token: string): void => {
       localStorage.setItem('pa_token', token)
       localStorage.setItem('pa_expires', (new Date().getTime() + 60).toString())
       window.location.replace('/trello/')
    }
+   useEffect((): void => {
+      const hashKey = getHashKeyFromLocationAfterLogin()
+
+      if (hashKey.token) {
+         setAccessTokenInLocalStorage(hashKey.token)
+      }
+   }, [])
 
    const isDevelopmentEnvironment = (): boolean => {
       if (

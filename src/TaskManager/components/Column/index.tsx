@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { BsPlus } from 'react-icons/bs'
 import Popup from 'reactjs-popup'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { IoCloseSharp } from 'react-icons/io5'
+import { FiMoreHorizontal } from 'react-icons/fi'
+
+import { ColumnsContext } from '../../../Common/stores/index.context'
+
 import ColumnModel from '../../stores/models/ColumnModel'
 import ColumnsStore from '../../stores/ColumnsStore'
+
 import TaskItem from '../Task'
 import {
    ActionsPopupTrigger,
@@ -31,22 +36,28 @@ interface ColumnProps {
    index: number
 }
 
-interface InjectedProps extends ColumnProps {
-   columnsStore: ColumnsStore
-}
-
 const hideBtnText = 'Hide'
 const deleteBtnText = 'Delete'
 const addTaskTriggerText = 'Add a task'
 const addTaskBtnText = 'Add Task'
 
-const Column = inject('columnsStore')(
-   observer((props: ColumnProps) => {
-      const getInjectedProps = (): InjectedProps => props as InjectedProps
+const Column = observer(
+   (props: ColumnProps): JSX.Element => {
       const [taskNameInputVal, changeTaskNameInputVal] = useState('')
-      const handleAddTask = () => {
-         const { columnsStore } = getInjectedProps()
-         const { addTask } = columnsStore
+      const columnContextObj = useContext(ColumnsContext)
+
+      const [addTaskModelState, updateAddTaskModelState] = useState(false)
+      const handleAddTaskModalState = (): void => {
+         updateAddTaskModelState(!addTaskModelState)
+      }
+
+      const handleAddTaskClose = (): void => {
+         changeTaskNameInputVal('')
+         updateAddTaskModelState(false)
+      }
+
+      const handleAddTask = (): void => {
+         const { addTask } = columnContextObj
          const { columnDetails } = props
          const { id } = columnDetails
          addTask(taskNameInputVal, id)
@@ -58,20 +69,9 @@ const Column = inject('columnsStore')(
       //    return
       // }
 
-      const [addTaskModelState, updateAddTaskModelState] = useState(false)
-      const handleAddTaskModalState = () => {
-         updateAddTaskModelState(!addTaskModelState)
-         console.log(addTaskModelState)
-      }
-      const handleAddTaskClose = () => {
-         changeTaskNameInputVal('')
-         updateAddTaskModelState(false)
-      }
-
       const { columnDetails, index } = props
       const { id, columnName, tasksMap } = columnDetails
-      const { columnsStore } = getInjectedProps()
-      const { columnsList } = columnsStore
+      const { columnsList } = columnContextObj
       const thisCol = columnsList.get(id)
       if (thisCol !== undefined) {
          const tasksInList = Array.from(tasksMap.values())
@@ -89,7 +89,12 @@ const Column = inject('columnsStore')(
                            <ColumnName>{columnName}</ColumnName>
                            <Popup
                               trigger={
-                                 <ActionsPopupTrigger>...</ActionsPopupTrigger>
+                                 <ActionsPopupTrigger>
+                                    <FiMoreHorizontal
+                                       size={30}
+                                       color={'#231F20;'}
+                                    />
+                                 </ActionsPopupTrigger>
                               }
                               position='right top'
                               on='click'
@@ -170,10 +175,9 @@ const Column = inject('columnsStore')(
                </Draggable>
             </ColumnMainContainer>
          )
-      } else {
-         return <></>
       }
-   })
+      return <></>
+   }
 )
 
 export default Column

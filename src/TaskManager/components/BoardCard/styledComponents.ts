@@ -11,7 +11,8 @@ export const BoardCardContainer = styled.div`
    left: 507px;
    top: 365px;
    border-radius: 4px;
-   margin: 05px;
+   margin-right: 15px;
+   margin-bottom: 15px;
    padding: 10px;
    text-align: center;
    color: #0079bf;
@@ -26,5 +27,4 @@ export const BoardName = styled.p`
    font-weight: 500;
    font-size: 18px;
    line-height: 24px;
-   // color: #0079bf;
 `

@@ -1,30 +1,32 @@
 import { action, observable } from 'mobx'
 import { bindPromiseWithOnSuccess } from '@ib/mobx-promise'
-import TaskManagementService from '../../services/TaskManagementService'
+
+import ColumnsService from '../../services/ColumnsService'
+
 import ColumnModel from '../models/ColumnModel'
 import TaskModel from '../models/TaskModel'
 
 class ColumnsStore {
    @observable columnsList!: Map<string, ColumnModel>
    @observable columnIdsList!: string[]
-   taskManagementService!: TaskManagementService
+   columnsService!: ColumnsService
    @observable columnsListApiStatus!: number
    @observable tasksApiStatus!: number
-   constructor(taskManagementService) {
+   constructor(columnsService: ColumnsService) {
       this.columnsList = new Map()
       this.columnIdsList = []
-      this.taskManagementService = taskManagementService
+      this.columnsService = columnsService
       this.columnsListApiStatus = 0
       this.tasksApiStatus = 0
    }
 
-   @action.bound getBoardColumns(boardId: string) {
+   @action.bound
+   getBoardColumns(boardId: string): Promise<any> {
       this.columnsList.clear()
-      // this.columnIdsList = []
-      const BoardDetailsPromiseObj = this.taskManagementService.getBoardDetails(
+      const boardDetailsPromiseObj = this.columnsService.getBoardDetails(
          boardId
       )
-      return bindPromiseWithOnSuccess(BoardDetailsPromiseObj)
+      return bindPromiseWithOnSuccess(boardDetailsPromiseObj)
          .to(
             status => {
                this.columnsListApiStatus = status
@@ -47,27 +49,30 @@ class ColumnsStore {
          })
    }
 
-   @action.bound updateColumnPosition(listId, position) {
-      this.taskManagementService.updateColumnPosition(listId, position)
+   @action.bound
+   updateColumnPosition(listId: string, position): void {
+      this.columnsService.updateColumnPosition(listId, position)
    }
-   @action.bound updateColumnOrder(columnsList) {
+
+   @action.bound
+   updateColumnOrder(columnsList: Map<string, ColumnModel>): void {
       this.columnsList = columnsList
    }
-   @action.bound getTasksInList(id: string) {
-      const ListCardsPromiseObj = this.taskManagementService.getTasksInList(id)
 
+   @action.bound
+   getTasksInList(id: string): Promise<any> | undefined {
+      const listCardsPromiseObj = this.columnsService.getTasksInList(id)
       const givenColumn = this.columnsList.get(id)
       if (givenColumn !== undefined) {
          givenColumn.tasksListApiStatus = 0
          givenColumn.tasksMap.clear()
-         return bindPromiseWithOnSuccess(ListCardsPromiseObj)
+         return bindPromiseWithOnSuccess(listCardsPromiseObj)
             .to(
                status => {
                   givenColumn.tasksListApiStatus = status
                },
                response => {
                   if (!response) return
-                  const a = new Map()
                   response.map(eachTask =>
                      givenColumn.tasksMap.set(
                         eachTask.id,
@@ -82,25 +87,32 @@ class ColumnsStore {
       }
    }
 
-   @action.bound updateTasksInList(listId: string, updatedList) {
+   @action.bound
+   updateTasksInList(
+      listId: string,
+      updatedList: Map<string, TaskModel>
+   ): void {
       const listToUpdate = this.columnsList.get(listId)
       if (listToUpdate === undefined) {
          return
       }
       listToUpdate.tasksMap = updatedList
    }
-   @action.bound updateTaskPosition(taskId: string, position: string) {
-      this.taskManagementService.updateTaskPosition(taskId, position)
-   }
-   @action.bound updateTaskList(taskId: string, listId: string) {
-      this.taskManagementService.updateTaskList(taskId, listId)
+
+   @action.bound
+   updateTaskPosition(taskId: string, position: string): void {
+      this.columnsService.updateTaskPosition(taskId, position)
    }
 
-   @action.bound addTask(name: string, columnId: string) {
-      const addTaskPromiseObj = this.taskManagementService.addTask(
-         name,
-         columnId
-      )
+   @action.bound
+   updateTaskList(taskId: string, listId: string): void {
+      this.columnsService.updateTaskList(taskId, listId)
+   }
+
+   @action.bound
+   addTask(name: string, columnId: string): Promise<any> | undefined {
+      const addTaskPromiseObj = this.columnsService.addTask(name, columnId)
+
       const columnToAddTask = this.columnsList.get(columnId)
       if (columnToAddTask === undefined) {
          return
@@ -122,11 +134,10 @@ class ColumnsStore {
             alert(error)
          })
    }
-   @action.bound addColumn(name: string, boardId: string) {
-      const addColumnPromiseObj = this.taskManagementService.addColumn(
-         name,
-         boardId
-      )
+   @action.bound
+   addColumn(name: string, boardId: string): Promise<any> {
+      const addColumnPromiseObj = this.columnsService.addColumn(name, boardId)
+
       return bindPromiseWithOnSuccess(addColumnPromiseObj)
          .to(
             status => {

@@ -1,38 +1,34 @@
-import { inject, observer } from 'mobx-react'
-import React from 'react'
+import React, { useContext } from 'react'
+import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
+
+import { OrganizationsContext } from '../../../Common/stores/index.context'
+
 import OrganizationModel from '../../stores/models/OrganizationsModel'
-import OrganizationsStore from '../../stores/OrganizationsStore'
+
 import { OrganizationCardContainer, OrganizationName } from './styledComponents'
 
 interface OrganizationCardProps {
    organizationDetails: OrganizationModel
 }
-interface InjectedProps extends OrganizationCardProps {
-   organizationsStore: OrganizationsStore
-}
 
-const OrganizationCard = inject('organizationsStore')(
-   observer(
-      (props: OrganizationCardProps): JSX.Element => {
-         const getInjectedProps = (): InjectedProps => props as InjectedProps
-         const { organizationsStore } = getInjectedProps()
-         const { setActiveOrganization } = organizationsStore
-         const { organizationDetails } = props
-         const { displayName, id } = organizationDetails
-         const handleOnclickOrganizationCard = () => {
-            setActiveOrganization(id)
-         }
-         return (
-            <Link to={`/trello/${id}`}>
-               <OrganizationCardContainer
-                  onClick={handleOnclickOrganizationCard}
-               >
-                  <OrganizationName>{displayName}</OrganizationName>
-               </OrganizationCardContainer>
-            </Link>
-         )
+const OrganizationCard = observer(
+   (props: OrganizationCardProps): JSX.Element => {
+      const organizationsContextObj = useContext(OrganizationsContext)
+
+      const { setActiveOrganization } = organizationsContextObj
+      const { organizationDetails } = props
+      const { displayName, id } = organizationDetails
+      const handleOnclickOrganizationCard = (): void => {
+         setActiveOrganization(id)
       }
-   )
+      return (
+         <Link to={`/trello/${id}`}>
+            <OrganizationCardContainer onClick={handleOnclickOrganizationCard}>
+               <OrganizationName>{displayName}</OrganizationName>
+            </OrganizationCardContainer>
+         </Link>
+      )
+   }
 )
 export default OrganizationCard
