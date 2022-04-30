@@ -11,13 +11,12 @@ interface OrganizationCardProps {
 const BoardCard = (props: OrganizationCardProps): JSX.Element => {
    const { boardDetails } = props
    const { name, id } = boardDetails
+   const url_redirect = name
+      .split(' ')
+      .join('-')
+      .toLowerCase()
    return (
-      <Link
-         to={`/trello/b/${id}/${name
-            .split(' ')
-            .join('-')
-            .toLowerCase()}`}
-      >
+      <Link to={`/trello/b/${id}/${url_redirect}`}>
          <BoardCardContainer>
             <BoardName>{name}</BoardName>
          </BoardCardContainer>
